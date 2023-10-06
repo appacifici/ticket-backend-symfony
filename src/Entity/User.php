@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Entity;
+
+use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 

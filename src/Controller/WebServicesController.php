@@ -13,7 +13,7 @@ class WebServicesController
 {
     //EndPoint Rest CRUD seplice per la gestione degli utenti
     #[Route('/user', methods: ['GET', 'POST', 'PUT', 'DELETE'], name: 'wsuser')]
-    public function ticketEvent(
+    public function userEvent(
         RestManager $restManager        
     ) {
 

@@ -99,6 +99,16 @@ final class Version20231006130911 extends AbstractMigration
         )
         ");
 
+        $this->addSql("INSERT INTO user (id,name,surname,email,username,password) VALUE (
+            1,
+            'Alessandro', 
+            'Pacifici', 
+            'aleweb87@gmail.com',
+            'aleweb87',
+            'd6abe0fa83460ca820337f6db4fe3403'
+        )
+        ");
+
     }
 
     public function down(Schema $schema): void

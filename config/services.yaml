@@ -35,6 +35,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
     
+    
+    #Alias
+    App\Domain\Ticket\Interface\TicketPurchaseInterface: '@App\Domain\Ticket\DTO\TicketPurchaseDTO'
+
     App\Service\DependencyService\DependencyManager:
         arguments: 
             $paramaters: '%app.dependencyManager%'

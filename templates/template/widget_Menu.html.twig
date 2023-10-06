@@ -1,0 +1,88 @@
+<div class="widget_Menu">   
+    <ul class="menu list-unstyled">                                                            
+        {% if permission.user is defined and permission.user.read %}
+            <li class="noHover">
+                <ul class="noHover">
+                    <span class="blue"> Utenti </span>                 
+                    <li>
+                        <a href="/users">
+                            Utenti
+                        </a>
+                    </li> 
+                </ul>
+            </li>
+        {%endif%}
+        {% if permission.permission is defined and  permission.permission.read %}
+            <li class="noHover">
+                <ul class="noHover">
+                    <span class="blue"> PERMESSI </span>                                                      
+                    <li data-item-menu>
+                        <a href="{{path('listGroupPermission')}}">
+                            Gruppi
+                        </a>
+                    </li>
+                    <li data-item-menu>
+                        <a href="{{path('listGroupSection')}}">
+                            Sezioni
+                        </a>
+                    </li>
+                    <li data-item-menu>
+                        <a href="{{path('listGroupSectionPermission')}}">
+                            Permessi
+                        </a>
+                    </li>                                                    
+                </ul>
+            </li>    
+        {%endif%}
+        <li class="noHover">
+            <ul class="noHover">
+                <span class="blue"> DASHBOARD </span>
+                {% if permission.alert is defined and permission.alert.read %}
+                    <li>
+                        <a href="{{path('alert')}}">
+                            <i class="fa fa-external-link" aria-hidden="true"></i> Alert
+                        </a>
+                    </li>   
+                {%  endif %}                  
+                {% if permission.bank is defined and permission.bank.read %}
+                    <li>
+                        <a href="{{path('banks')}}">
+                            <i class="fa fa-external-link" aria-hidden="true"></i> Banche
+                        </a>
+                    </li>   
+                {%  endif %}                  
+                {% if permission.job is defined and permission.job.read %}
+                    <li>
+                        <a href="{{path('jobs')}}">
+                            <i class="fa fa-external-link" aria-hidden="true"></i> Lavori
+                        </a>
+                    </li>   
+                {%  endif %}                  
+                {% if permission.wallet is defined and permission.wallet.read %}
+                    <li>
+                        <a href="{{path('wallet')}}">
+                            <i class="fa fa-external-link" aria-hidden="true"></i> Conti bancari
+                        </a>
+                    </li>   
+                {%  endif %}                  
+                {% if permission.financing is defined and permission.financing.read %}
+                    <li>
+                        <a href="{{path('financing')}}">
+                            <i class="fa fa-external-link" aria-hidden="true"></i> Finanziamenti
+                        </a>
+                    </li>   
+                {%  endif %}                  
+                {% if permission.house is defined and permission.house.read %}
+                    <li>
+                        <a href="{{path('house')}}">
+                            <i class="fa fa-external-link" aria-hidden="true"></i> Casa
+                        </a>
+                    </li>   
+                {%  endif %}                  
+            </ul>
+        </li>                                                                           
+    </ul>
+</div>    
+{%if fetch_widget_Menu is defined %}
+    {{ fetch_widget_Menu|raw  }}
+{%endif%}

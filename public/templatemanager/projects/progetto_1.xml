@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<root>
+    <tpl name="main.tpl" active="1" description="tpl radice">
+        <tpl name="banner.tpl" active="1" description="tpl sezione head"></tpl>
+        <tpl name="menusx.tpl" active="1" description="tpl sezione menu sx"></tpl>
+        <tpl name="corpo.tpl" active="1" description="tpl sezione corpo pagina">
+            <tpl name="navigazione.tpl" active="1" description="tpl sezione navigazione"></tpl>
+            <tpl name="titolo.tpl" active="1" description="tpl sezione titolo"></tpl>
+            <tpl name="articolo.tpl" active="1" description="tpl sezione articolo"></tpl>
+        </tpl>
+        <tpl name="footer.tpl" active="1" description="tpl sezione footer"></tpl>
+    </tpl>
+</root>

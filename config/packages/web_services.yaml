@@ -1,0 +1,15 @@
+parameters:
+       
+    ws.limit.create:                    2000
+    ws.limit.update:                    2000
+    ws.limit.delete:                    2000
+    ws.limit.getAll:                    2000
+    ws.limit.getOne:                    2000
+        
+    ws.code.resMissingFields:           1
+    ws.code.errorValidateEntity:        2
+    ws.code.respInternalError:          3
+    ws.code.resMissingParamEndPoint:    4
+    ws.code.notResultQuery:             5
+    ws.code.errorTypeFields:            6
+    ws.code.actionNotEnabled:           7

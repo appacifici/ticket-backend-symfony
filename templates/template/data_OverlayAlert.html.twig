@@ -1,0 +1,97 @@
+<div class="dataOverlayAlert">
+    <div class="infos">
+        <span><span class="orange">Prodess ID:</span> &nbsp;&nbsp;{{ data.process }}</span>
+        <span><span class="orange">Name:</span> &nbsp;&nbsp;{{ data.processName }}</span>
+        <span><span class="orange">Data:</span> &nbsp;&nbsp;{{ data.createdAt| date('Y-m-d H:i:s') }}</span>
+    </div>
+    <div class="infos">
+        <table>
+            <tr>
+                <td>Processo</td>
+                <td>Id Processo</td>
+                <td>Inizio (ms)</td>
+                <td>Fine (ms)</td>
+                <td>Durata (ms)</td>
+                <td>Memoria</td>                
+                <td>Sezione</td>                
+            </tr>
+            {%  for timeTracker in timeTrackers %}
+                <tr>
+                    <td>{{ timeTracker.processName }}</td>
+                    <td>{{ timeTracker.childProcess }}</td>
+                    <td>{{ timeTracker.startTime }}</td>
+                    <td>{{ timeTracker.endTime }}</td>
+                    <td>{{ timeTracker.duration }}</td>
+                    <td>{{ timeTracker.memory }}</td>
+                    <td>{{ timeTracker.category }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <div class="head">
+                    <i class="fa fa-dot-circle-o success " aria-hidden="true"></i>Chiamata                            
+                </div>
+                <div class="overflow">    
+                    <pre>
+                        {{ data.callData | raw  }}&nbsp;
+                    </pre>
+                </div>
+            </td>
+            <td>
+                <div class="head">
+                    <i class="fa fa-dot-circle-o success " aria-hidden="true"></i>Risposta                            
+                </div>
+                <div class="overflow">     
+                    {%  if data.callResponse is not empty %}
+                        <pre>
+                            {{ data.callResponse | raw  }}&nbsp;
+                        </pre>
+                    {% endif %}
+                </div>
+            </td>
+        <tr>
+        <tr>
+            <td>
+                <div class="head">
+                    <i class="fa fa-dot-circle-o error " aria-hidden="true"></i>Error
+                </div>
+                <div class="overflow">
+                    {%  if data.error is not empty %}
+                        <pre>
+                            {{ data.error | raw }}&nbsp;
+                        </pre>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                <div class="head">
+                    <i class="fa fa-dot-circle-o alerto " aria-hidden="true"></i>Alert
+                </div>
+                <div class="overflow">
+                    {%  if data.alert is not empty %}
+                        <pre>
+                            {{ data.alert | raw  }}&nbsp;
+                        </pre>
+                    {% endif %}
+                </div>
+            </td>                   
+        <tr>
+        <tr>
+             <td colspan="2">
+                <div class="head">
+                    <i class="fa fa-dot-circle-o success " aria-hidden="true"></i>Debug                            
+                </div>
+                <div class="overflow">   
+                    {%  if data.debug is not empty %}
+                        <pre>
+                            {{ data.debug | raw  }}&nbsp;
+                        </pre>
+                    {% endif %}
+                </div>                           
+            </td>
+        <tr>
+    </table>
+</div>

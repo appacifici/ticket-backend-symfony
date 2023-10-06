@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+{#{% htmlcompress %} #}
+<html lang="it">
+    <head>
+     {#   <link rel="dns-prefetch preconnect" href="https://www.googletagmanager.com">
+        <link rel="dns-prefetch preconnect" href="www.google-analytics.com">
+        <link rel="dns-prefetch preconnect" href="https://connect.facebook.net">     
+        #}
+     
+        <link rel="preconnect" href="//www.googletagmanager.com">
+        <link rel="dns-prefetch" href="//www.googletagmanager.com">
+                
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, height=device-height"/>    
+        <meta name="theme-color" content="#2b6481">
+{#        <meta property="fb:pages" content=""/>#}
+        <meta name="google-site-verification" content="{{googleSiteVerification}}" />
+        <meta name="msvalidate.01" content="{{bingSiteVerification}}" />
+        
+        {#<!-- TradeDoubler site verification 3039525 -->#}
+{#        <meta name="robots" content="noindex">#}
+        
+        <title>
+            {%if error404Page is not defined or error404Page is  empty %}
+                {% block title %}
+                    {%if pageTitle is defined%}
+{#                        {{ adaptFromMeta( pageTitle | raw ) }}#}
+                    {% endif %}
+                {% endblock %}
+            {%else%}
+                404 Not Found - AcquistiGiusti.it
+            {%endif%}
+        </title>
+        
+        {%if error404Page is not defined or error404Page is  empty %}
+            {%if pageDesc is defined%}
+{#                <meta name="description" content="{{ adaptFromMeta( pageDesc | raw ) }}" />#}
+            {% endif %}
+            <link rel='stylesheet' id='penci_font_slogan-css'  href='/fonts/raleway/font-raleway.css' type='text/css' media='all' />
+            {% if robots is defined and robots is not empty %}
+                <meta name="robots" content="{{robots}}"/>
+            {% endif %}
+        {% endif %}
+        
+        {{ analyticsHead | raw }} 
+       
+        
+        <style>                
+            {% if extraStyle is defined  %}
+                .widget-news .ranking .product {
+                    width:{{widthTD}}%!important;
+                }
+                @media (max-width: 900px) {
+                    .widget-news .ranking .product {
+                        width: 100%!important;
+                        float: none;
+                        margin-bottom: 25px;
+                        box-shadow: 0 0px 6px 4px #d6d4d4;
+                    }
+                }
+                {{extraStyle}}
+            {%endif%}
+            {{aboveTheFoldCss|raw}}   
+        </style>                           
+        
+        {% block stylesheetsCSSHead %}     
+
+        <!--  Stylesheet Complete CSS compiled from ../assets/css/admin/module.admin.stylesheet-complete.less -->       
+        {% if compactSite %}
+            <link rel="stylesheet" type="text/css" href="{{ folderCss }}/css_{{ fileSection }}_head.css?v={{ cssVersion }}">
+        {% else %}
+            {% for key, file in dependenciesCSSHead %}
+                <link rel="stylesheet" type="text/css" href="{{ key }}">
+            {% endfor %}            
+        {% endif %}
+    {% endblock %} 
+        
+        {%if googleScript is defined and googleScript is not empty %}
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        {%endif%}
+        {#<script>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-2895778574087441",
+            enable_page_level_ads: true
+          });
+        </script>#}            
+    </head>
+    <body> 
+        
+    {{ analyticsBody | raw }}
+    
+    {% block body %}{% endblock %}         
+    
+    <script>
+        
+        //GTM Trick selettori
+        if (!Element.prototype.matches) {
+            Element.prototype.matches = 
+            Element.prototype.matchesSelector || 
+            Element.prototype.mozMatchesSelector ||
+            Element.prototype.msMatchesSelector || 
+            Element.prototype.oMatchesSelector || 
+            Element.prototype.webkitMatchesSelector ||
+            function(s) {
+                var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                    i = matches.length;
+                while (--i >= 0 && matches.item(i) !== this) {}
+                return i > -1;            
+            };
+        }
+        
+        var lastPagePagination    = '{%if lastPagePagination is defined%}{{ lastPagePagination }}{%endif%}';
+{#        var facebookAppId = '{{facebookAppId}}';#}
+{#        var googleClientId = '{{googleClientId}}';#}
+{#        var googleApiKey = '{{googleApiKey}}';#}
+{#        var googleScopes = '{{googleScopes}}';#}
+{#        var facebookScope = '{{facebookScope}}';#}
+        var PAGE_URL = '{{canonicalUrl}}';
+        var PAGE_IDENTIFIER = '{{canonicalUrl}}';
+    </script>
+
+    
+    {# Inclusione librerie js #}
+    {% if compactSite %}
+        <script src="{{ folderJs }}/js_{{ fileSection }}_head.js?v={{ jsVersion }}"></script>
+    {% else %}
+        {% block dependenciesJSHead %}
+            {% for key, file in dependenciesJSHead %}
+                <script  src="{{ key }}?v={{ random() }}aaa"></script>
+            {% endfor %}
+        {% endblock %}
+    {% endif %}
+
+    {# Inclusione librerie js #}
+    {% if compactSite %}
+        <script async src="{{ folderJs }}/js_{{ fileSection }}_body.js?v={{ jsVersion }}"></script>
+        {#            <script src="{{ folderJs }}/js_homepage_body.js?v={{ jsVersion }}"></script>#}
+    {% else %}
+        {% block dependenciesJSBody %}
+            {% for key, file in dependenciesJSBody  %}
+                <script async src="{{ key }}?v={{ random()  }}"></script>
+            {% endfor %}
+        {% endblock %}
+    {% endif %}
+    
+    
+    {% if compactSite is empty %}            
+            <link rel="stylesheet" href="/fonts/font-awesome.min.css?v=20170517"/>    
+        {% endif %}        
+        <link rel="stylesheet" type="text/css" href="{{ folderCss }}/main.{{ nameFileCssVerSite }}.css?v={{ cssVersion }}">
+        
+        
+{#    <link rel="stylesheet" type="text/css" href="styles/default.css?v={{ cssVersion }}">#}
+
+
+    {#main.allcategoriesproduct.template.css#}    
+
+    {% if compactSite %}
+        <link rel="stylesheet" type="text/css" href="{{ folderCss }}/main.{{ fileSection }}.css?v={{ cssVersion }}">
+    {% else %}
+        {% for key, file in dependenciesCSSBody %}
+            <link rel="stylesheet" type="text/css" href="{{ key }}?v={{ random()  }}">
+        {% endfor %}            
+    {% endif %}  
+
+    {% if compactSite is empty %}
+        <link rel="stylesheet" type="text/css" href="{{ folderCss }}/Desk.BODY.{{ currentRouteCss }}.css?v={{ random()  }}">
+    {% endif %}  
+    {#<div id="boxOverlay boxElement noHover widthAll">
+        <div class="opacityBox"></div>
+        <div class="container">            
+            <div class="content">   
+                <span data-closeoverlay class="close">X</span>
+            </div>                
+        </div>            
+    </div> #}        
+{#    {{ fbPixel | raw }}#}
+
+
+    {%if googleScript is defined and googleScript is not empty %}
+        <script>
+            setTimeout(function() {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            }, 1000 )</script>                
+    {%endif%}
+<div class="overlaybuttonListComparisonModel" data-overlaybuttonListComparisonModel></div>    
+    <div class="overlayDictionary" data-overlayDictionary></div>        
+</body>
+</html>
+
+{#{% endhtmlcompress %}#}

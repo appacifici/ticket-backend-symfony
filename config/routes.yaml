@@ -1,0 +1,6 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        tags: ['controller.service_arguments']
+        namespace: App\Controller
+    type: attribute

@@ -1,0 +1,25 @@
+#Impostazione per il servizio di inclusione automatica delle dipendenze javascript e css
+parameters: 
+
+  handler_cache:                      myCachePool  
+  app.compactSite:                    false
+  app.folder_templates_xml:           '%kernel.project_dir%/layouts/'
+  app.folder_js_write:                '%kernel.project_dir%/public/js/widget/'
+  app.folder_js:                      '/js/'
+  app.folder_js_minified:             '/js/widget/'
+  app.folder_css:                     '/css/'
+  app.default_version_site:           'template'
+  app.hostProtocol:                   'http'
+  app.wwwProtocol:                    'www.' 
+  app.extensionTpl:                   '.html.twig'
+  app.cdn:                            '' 
+  app.cssVersion:                     201804
+  app.jsVersion:                      201804
+  app.compactVersion:                 '/min'
+  app.dependencyManager:    
+    commonPath:                       '/php/assets/'
+    extensionsJsPath:                 '%app.folder_js%'
+    commonCSSPath:                    '/php/assets/'
+    extensionCssPath:                 '%app.folder_css%%app.default_version_site%/'
+    extensionsJsAdminPath:            '%app.folder_js%admin'
+    extensionsTemplates:              '/templates/'    

@@ -1,0 +1,49 @@
+parameters:
+   
+    
+framework:
+    cache:
+        # Unique name of your app: used to compute stable namespaces for cache keys.
+        #prefix_seed: your_vendor_name/app_name
+
+        # The "app" cache stores to the filesystem by default.
+        # The data in this cache should persist between deploys.
+        # Other options include:
+
+        # Redis
+        app: cache.adapter.redis
+        default_redis_provider: redis://%redis_host%
+
+        # Namespaced pools use the above "app" backend by default
+        pools:
+            sncredis:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_sncredis_db_n%
+
+            sncredisDoctrineMetadata:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_sncredisDoctrinemetadata%
+                
+            sncredisDoctrineResult:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_sncredisDoctrineResult%
+                
+            sncredisDoctrineQueryCache:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_sncredisDoctrineQueryCache%
+                
+            secondLevelCache:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_secondLevelCache%
+                
+            sncredisSessionPhp:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_sncredisSessionPhp%
+                
+            profiler_storage:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_profiler_storage%
+                
+            monolog:
+                adapter: cache.adapter.redis
+                provider: redis://%redis_host%/%redis_monolog%

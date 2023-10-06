@@ -1,0 +1,82 @@
+<div class="headingWidget">
+    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+    <div>
+        <h1>Alert monitoraggio<h1>
+        <h2>Monitora gli eventi del portale<h2>
+    </div>
+</div>
+<div class="widget widget_Alert">    
+    <table class="table footable">
+        <thead>
+            <tr> 
+                <th class="center" data-hide="phone"></th>                                          
+                <th data-class="expand">Date</th>                                
+                <th data-class="expand">Name</th>                                
+                <th data-class="expand">Chiamata</th>                                
+                <th data-class="expand">Risposta</th>                             
+                <th data-class="expand">Error</th>     
+                <th data-class="expand">Alert</th>                                
+{#                <th data-class="expand">Debug</th>                                                                           #}
+{#                <th data-class="expand">General</th>                                #}
+                <th data-class="expand">Process</th>                                
+            </tr>
+        </thead>
+        <tbody>
+            {% for alert in alerts %}
+                {% if alert is defined %}
+                    <tr class="selectable" data-openOverlay="Alert" data-id="{{alert.id}}">
+                        <td class="important center" ><span class="badge">{{alert.id}}</span></td>
+                        <td class="important center"><b>{{alert.createdAt| date('Y-m-d H:i:s')}}</b></td>                                 
+                        <td class="important" data-modify="input" data-field="screen">{{alert.processName}}</td>                      
+                        <td class="important" data-modify="input" data-field="screen">
+                            {% if alert.callData  is not empty %}
+                                <i class="fa fa-dot-circle-o success" aria-hidden="true"></i>
+                            {% else %}                                   
+                            {% endif %}
+                        </td>                                              
+                        <td class="important" data-modify="input" data-field="screen">
+                            {% if alert.callResponse is not empty %}
+                                <i class="fa fa-dot-circle-o success" aria-hidden="true"></i>
+                            {% else %}
+                                
+                            {% endif %}                            
+                        </td>          
+                        <td class="important">
+                            {% if alert.error is not empty %}
+                                <i class="fa fa-dot-circle-o error" aria-hidden="true"></i>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>          
+                        <td class="important" data-modify="input" data-field="screen">
+                            {% if alert.alert is not empty %}
+                                <i class="fa fa-dot-circle-o alerto " aria-hidden="true"></i>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>                                              
+                        {#<td class="important">
+                            {% if alert.debug is not empty %}
+                                <i class="fa fa-dot-circle-o success" aria-hidden="true"></i>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>                                                                                                          
+                        <td class="important">
+                            {% if alert.general is not empty %}
+                                <i class="fa fa-dot-circle-o success" aria-hidden="true"></i>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>   #}
+                        <td class="important">{{alert.process}}</td>             
+                    </tr>
+                {%endif%}
+            {%endfor%}
+        </tbody>
+    </table>
+    {{ htmlPag | raw}}
+</div>
+{%if fetch_widget_Alert is defined %}
+    {{ fetch_widget_Alert|raw  }}
+{%endif%}

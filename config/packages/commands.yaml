@@ -1,0 +1,7 @@
+parameters:
+       
+    command.limit.create:              500
+    command.limit.update:              500
+    command.limit.delete:              500
+    command.limit.getAll:              500
+    command.limit.getOne:              500

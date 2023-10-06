@@ -1,0 +1,78 @@
+parameters:    
+    
+    redis_host:                         redis    
+    redis_sncredis_db_n:                1
+    redis_sncredisDoctrinemetadata:     2 
+    redis_sncredisDoctrineResult:       3
+    redis_sncredisDoctrineQueryCache:   4
+    redis_secondLevelCache:             5
+    redis_sncredisSessionPhp:           6
+    redis_profiler_storage:             7  
+    redis_monolog:                      8
+    
+snc_redis:
+    clients:        
+        sncredis:
+            type: predis
+            alias: sncredis
+            dsn:
+                - "redis://%redis_host%/%redis_sncredis_db_n%"
+#                - "redis://%redis_host_repl1%"            
+            logging: true    
+            
+        sncredisDoctrinemetadata:
+            type: predis
+            alias: sncredisDoctrinemetadata
+            dsn:
+                - "redis://%redis_host%/%redis_sncredisDoctrinemetadata%"
+            # options:
+            #     replication: false
+            logging: true    
+            
+        sncredisDoctrineResult:
+            type: predis
+            alias: sncredisDoctrineResult
+            dsn:
+                - "redis://%redis_host%/%redis_sncredisDoctrineResult%"
+            # options:
+            #     replication: false
+            logging: true    
+            
+        sncredisDoctrineQueryCache:
+            type: predis
+            alias: sncredisDoctrineQueryCache
+            dsn:
+                - "redis://%redis_host%/%redis_sncredisDoctrineQueryCache%"
+            # options:
+            #     replication: false                
+            logging: true    
+            
+        secondLevelCache:
+            type: predis
+            alias: secondLevelCache
+            dsn:
+                - "redis://%redis_host%/%redis_secondLevelCache%"
+            # options:
+            #     replication: false                
+            #     connection_timeout: 10
+            #     read_write_timeout: 30   
+            logging: true    
+                        
+        sncredisSessionPhp:
+            type: predis
+            alias: sncredisSessionPhp
+            dsn: redis://%redis_host%/%redis_sncredisSessionPhp%                 
+                
+        profiler_storage:
+            type: predis
+            alias: profiler_storage
+            dsn: redis://%redis_host%/%redis_profiler_storage%
+            logging: false        
+                                
+        monolog:
+            type: predis
+            alias: monolog
+            dsn: redis://%redis_host%/%redis_monolog%
+            logging: false
+            options:
+                connection_persistent: true

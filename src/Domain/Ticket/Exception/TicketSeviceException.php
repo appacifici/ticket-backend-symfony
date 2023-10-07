@@ -11,6 +11,7 @@ class TicketSeviceException extends Exception
 {
 
 	private Event $event;
+	private int   $errorCode;
 
 	public function errorMessage()
   	{
@@ -27,6 +28,18 @@ class TicketSeviceException extends Exception
 	public function setEvent(Event $event): self
 	{
 		$this->event = $event;
+
+		return $this;
+	}
+
+	public function getErrorCode():int
+	{
+		return $this->errorCode;
+	}
+	
+	public function setErrorCode(int $errorCode):self
+	{
+		$this->errorCode = $errorCode;
 
 		return $this;
 	}

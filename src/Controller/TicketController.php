@@ -12,27 +12,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
 use App\Domain\Ticket\Interface\TicketPurchaseInterface;
+use App\Domain\Ticket\Response\ExceptionTicketResponse;
 
 class TicketController
 {
     #[Route('/ticket', methods: ['POST'], name: 'wsTicket')]
     public function ticketEvent(
-        Request $request,
-        LoggerInterface $logger,
+        Request                 $request,
+        LoggerInterface         $logger,
         TicketPurchaseInterface $ticketPurchase,
-        TicketService $ticketService
+        TicketService           $ticketService        
     ) {
         try {
             $requestData        = $request->toArray();
             $ticketPurchaseDTO  = $ticketPurchase->create($requestData);
             $ticketService->getEventTicket( $ticketPurchaseDTO );
         } catch( PurchaseDTOException $e ) {
-            echo $e->getNotFoundEntityEvent();
+            $exceptionTicketResponse = ExceptionTicketResponse::createPurchaseDTOException($e);
+            $response = $exceptionTicketResponse->serialize();
         } catch( TicketSeviceException $e ) {
-            echo $e->getEvent()->getLocation()->getName();
+            $exceptionTicketResponse = ExceptionTicketResponse::createTicketSeviceException($e);
+            $response = $exceptionTicketResponse->serialize();
         }
         
-
-        return new JsonResponse([]);
+        return new JsonResponse($response);
     }
 }

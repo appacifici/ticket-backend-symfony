@@ -46,15 +46,17 @@ class TicketService implements TicketServiceInterface {
 
     private function checkLimitPurchase(): bool {
         if( self::MAX_EVENT_TRANSACTION != -1 && count( $this->ticketFromEvent ) > self::MAX_EVENT_TRANSACTION ) {
-            $customException =  new TicketSeviceException();            
-            throw $customException;
+            $ticketSeviceException =  new TicketSeviceException('Ticket for event Limit Exceeded');        
+            $ticketSeviceException->setErrorCode( self::MAX_EVENT_TRANSACTION );    
+            throw $ticketSeviceException;
         }
 
         foreach( $this->ticketFromEvent AS $eventId => $total )
         if( self::MAX_TICKET_TRANSACTION != -1 && $total > self::MAX_TICKET_TRANSACTION ) {
             // throw new CustomException('Ticket for event Limit Exceeded');
-            $ticketSeviceException =  new TicketSeviceException();
+            $ticketSeviceException =  new TicketSeviceException('Ticket for event Limit Exceeded');
             $ticketSeviceException->setEvent( $this->events[$eventId] );
+            $ticketSeviceException->setErrorCode( self::MAX_TICKET_TRANSACTION );
             throw $ticketSeviceException;
         }
 

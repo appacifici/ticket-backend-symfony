@@ -38,6 +38,7 @@ services:
     
     #Alias
     App\Domain\Ticket\Interface\TicketPurchaseInterface: '@App\Domain\Ticket\DTO\TicketPurchaseDTO'
+    App\Domain\Ticket\Interface\PurchaseInterface: '@App\Domain\Ticket\DTO\PurchaseDTO'
 
     App\Service\DependencyService\DependencyManager:
         arguments: 

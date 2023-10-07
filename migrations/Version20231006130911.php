@@ -109,11 +109,30 @@ final class Version20231006130911 extends AbstractMigration
         )
         ");
 
+        ################ Secondo evento ###############
+
+        $this->addSql("INSERT INTO events (name,city,date_event) VALUE ('Imagine Dragons', 'Reggio Emilia', '2024-07-23T21:00:00')");
+        $this->addSql("INSERT INTO locations (name,address,event_id) VALUE ('Campovolo', 'Aeroporto di Reggio Emilia - LIDE', 2)");
+
+        //Settore Globale5
+        $this->addSql("INSERT INTO sectors (name,total,purchased,place_type,event_id,location_id) VALUE (
+                'Totale', 
+                '20000', 
+                0,
+                2,
+                1,
+                1
+            )
+        ");
+        
+
+
     }
 
     public function down(Schema $schema): void
     {
         $this->addSql("set foreign_key_checks=0");
+        $this->addSql("TRUNCATE user");
         $this->addSql("TRUNCATE places");
         $this->addSql("TRUNCATE sectors");
         $this->addSql("TRUNCATE locations");

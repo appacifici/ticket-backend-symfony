@@ -17,7 +17,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
      * l'utente premium puo acquistare fino a 5 biglietti, oppure quello base non può acquistare più di un evento, quindi per mancanza di tempo faccio
      * una cosa base lavorando con semplici costanti, che però inserisco nel servizio che si occupera dei controlli necessari per procedere all'acquisto
      */
-    const MAX_TICKET_TRANSACTION = 2;
+    const MAX_TICKET_TRANSACTION = 3;
     const MAX_EVENT_TRANSACTION  = 2;
 
     private array $events;
@@ -32,7 +32,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
     /**
      * $ticketPurchases array of PurchaseDTO
      */
-    public function getEventTicket( TicketPurchaseDTO $ticketPurchases ): bool {
+    public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ): bool {
         $purchases = $ticketPurchases->getPurchases();
         foreach( $purchases AS $purchase ) {
             $eventId                 = $purchase->getEvent()->getId();
@@ -40,7 +40,9 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
             $this->ticketFromEvent[$eventId] = isset($this->ticketFromEvent[$eventId]) ? $this->ticketFromEvent[$eventId]+1 : 1;
         }        
 
-        $this->checkLimitPurchase();
+        if( $this->checkLimitPurchase() === true ) {
+            $this->ticketsSoldOut($purchases);
+        }
         return true;
     }
 
@@ -62,7 +64,17 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
             $ticketPurchaseServiceException->setErrorCode( self::MAX_TICKET_TRANSACTION );
             throw $ticketPurchaseServiceException;
         }
+        return true;
+    }
 
+    /**
+     * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
+     */
+    private function ticketsSoldOut($purchases): bool {        
+        //Controllare disponibilità posti su tabella sectors controllando che purchased sia inferiore a total
+        //Se placeType = 2 scalare totale posti liberi da sector e mettere campo free di places a 0
+
+        //TODO: Creare Domain Place e Servizio con Interfaccia per recupero 
         return true;
     }
 

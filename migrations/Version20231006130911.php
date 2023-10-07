@@ -119,7 +119,7 @@ final class Version20231006130911 extends AbstractMigration
                 'Totale', 
                 '20000', 
                 0,
-                2,
+                1,
                 1,
                 1
             )

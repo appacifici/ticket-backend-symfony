@@ -11,5 +11,5 @@ interface TicketPurchaseServiceInterface {
     /**
      * $ticketPurchases array of PurchaseDTO
      */
-    public function getEventTicket( TicketPurchaseDTO $ticketPurchases ):bool;
+    public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ):bool;
 }

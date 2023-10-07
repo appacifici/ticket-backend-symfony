@@ -16,7 +16,7 @@ use App\Domain\Ticket\Response\ExceptionTicketResponse;
 
 class TicketController
 {
-    #[Route('/ticket', methods: ['POST'], name: 'wsTicket')]
+    #[Route('/ticket/purchase', methods: ['POST'], name: 'wsTicket')]
     public function ticketEvent(
         Request                 $request,
         LoggerInterface         $logger,
@@ -26,7 +26,7 @@ class TicketController
         try {
             $requestData        = $request->toArray();
             $ticketPurchaseDTO  = $ticketPurchase->create($requestData);
-            $ticketPurchaseService->getEventTicket( $ticketPurchaseDTO );
+            $ticketPurchaseService->purchaseTicket( $ticketPurchaseDTO );
         } catch( PurchaseDTOException $e ) {
             $exceptionTicketResponse = ExceptionTicketResponse::createPurchaseDTOException($e);
             $response = $exceptionTicketResponse->serialize();

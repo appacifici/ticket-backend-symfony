@@ -40,7 +40,7 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
                 if( ( $puschase['placeType'] == Sector::ASSIGNED_PLACE && empty( $puschase['placeId'] ) ) ||  $puschase['placeType'] == Sector::ASSIGNED_PLACE && !is_int($puschase['placeId']) ) {
                     $ticketSeviceException->setPuschases(PurchaseDTOException::PURCHASE_MISSING_PLACE_ID, $key);
                 }
-            }
+            }   
             if( empty( $puschase['eventId'] ) || !is_int($puschase['eventId']) ) {
                 $ticketSeviceException->setPuschases(PurchaseDTOException::PURCHASE_MISSING_EVENT_ID, $key);
             }            

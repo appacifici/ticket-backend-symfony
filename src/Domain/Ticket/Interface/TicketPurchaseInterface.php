@@ -8,9 +8,10 @@ use App\Entity\Event;
 use App\Entity\User;
 use App\Entity\Place;
 
-interface TicketPurchaseInterface {
+interface TicketPurchaseInterface
+{
     public function create(array $data): void;
-    public function getEvent(): Event;    
+    public function getEvent(): Event;
     public function getPlace(): Place;
     public function getUser(): User;
 }

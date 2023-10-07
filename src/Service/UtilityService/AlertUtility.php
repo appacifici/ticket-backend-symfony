@@ -18,11 +18,10 @@ class AlertUtility
      * @param \App\Service\UtilityService\TimeTracker $timeTracker
      */
     public function __construct(
-        protected Container $container, 
-        protected EntityManagerInterface $doctrine, 
+        protected Container $container,
+        protected EntityManagerInterface $doctrine,
         protected TimeTracker $timeTracker
-    )
-    {
+    ) {
         $this->processes    = [];
     }
 
@@ -79,7 +78,7 @@ class AlertUtility
         }
 
         //Scrive il log in caso ci sia un errore, o che venga superato il limite di tempo concesso
-        if ( empty( $this->processes[$process]['error'] ) && $totalDuration < $this->limitWrite) {
+        if (empty($this->processes[$process]['error']) && $totalDuration < $this->limitWrite) {
             return true;
         }
 

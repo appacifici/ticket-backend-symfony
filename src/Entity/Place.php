@@ -31,10 +31,10 @@ class Place
     private string $number;
 
     #[ORM\Column(name:"price", type:"smallint", length: 255)]
-    private $total;    
+    private $total;
 
     #[ORM\Column(name:"free", type:"smallint", length: 1)]
-    private $free;    
+    private $free;
 
     #[ManyToOne(targetEntity: Event::class, inversedBy: 'places')]
     #[JoinColumn(name: 'event_id', referencedColumnName: 'id')]
@@ -145,7 +145,6 @@ class Place
 
         return $this;
     }
-
 }
 
-//ES: Fila 1 - Posto 5 - 50 - 1 ( colplay ) - 1 ( Tibuna D'onore ) 
+//ES: Fila 1 - Posto 5 - 50 - 1 ( colplay ) - 1 ( Tibuna D'onore )

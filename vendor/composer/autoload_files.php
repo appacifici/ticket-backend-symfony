@@ -15,4 +15,5 @@ return array(
     'e8aa6e4b5a1db2f56ae794f1505391a8' => $vendorDir . '/amphp/amp/lib/functions.php',
     '76cd0796156622033397994f25b0d8fc' => $vendorDir . '/amphp/amp/lib/Internal/functions.php',
     '6cd5651c4fef5ed6b63e8d8b8ffbf3cc' => $vendorDir . '/amphp/byte-stream/lib/functions.php',
+    '9b38cf48e83f5d8f60375221cd213eee' => $vendorDir . '/phpstan/phpstan/bootstrap.php',
 );

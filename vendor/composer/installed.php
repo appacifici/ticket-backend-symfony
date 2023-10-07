@@ -298,6 +298,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '1.10.38',
+            'version' => '1.10.38.0',
+            'reference' => '5302bb402c57f00fb3c2c015bac86e0827e4b691',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'predis/predis' => array(
             'pretty_version' => 'v2.1.2',
             'version' => '2.1.2.0',

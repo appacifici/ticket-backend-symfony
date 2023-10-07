@@ -12,5 +12,4 @@ trait GlobalTrait
 
     #[ORM\Column(name:"update_at", type: "datetime", length: 10, nullable:true)]
     private $updatedAt;
-    
 }

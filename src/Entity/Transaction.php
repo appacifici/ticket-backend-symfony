@@ -92,7 +92,6 @@ class Transaction
 
         return $this;
     }
-
 }
 
 // ES: 320897dchw0er740r - 1 ( coldplay ) - 1544

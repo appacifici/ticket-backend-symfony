@@ -1,1 +1,6 @@
 var
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
+.phpcs-cache

@@ -37,12 +37,12 @@ class ControlService
      * AlertUtility constructor
      */
     public function __construct(
-        public Container $container, 
-        public EntityManagerInterface $doctrine, 
-        public TimeTracker $timeTracker, 
+        public Container $container,
+        public EntityManagerInterface $doctrine,
+        public TimeTracker $timeTracker,
         public Validator $validator,
         public AlertUtility $alertUtility
-    ){
+    ) {
         $this->container        = $container;
         $this->doctrine         = $doctrine;
         $this->timeTracker      = $timeTracker;
@@ -84,7 +84,7 @@ class ControlService
      */
     protected function checkExpectedTypeField($entity, object $input): bool
     {
-        $this->timeTracker->start("checkTypeInfoFieldEntity", "checkTypeInfoFieldEntity");        
+        $this->timeTracker->start("checkTypeInfoFieldEntity", "checkTypeInfoFieldEntity");
         $expected = RestManager::checkTypeInfoFieldEntity($this->doctrine, $entity, $input);
         if (!empty($expected)) {
             $this->response->result     = false;

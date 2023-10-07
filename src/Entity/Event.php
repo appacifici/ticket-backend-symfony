@@ -26,11 +26,11 @@ class Event
     #[ORM\GeneratedValue]
     private $id;
 
-    #[Assert\NotBlank( message: 'Inserire il nome dell\'evento' )]
+    #[Assert\NotBlank(message: 'Inserire il nome dell\'evento')]
     #[Assert\Type(
         type: 'string',
         message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
-    )] 
+    )]
     #[Assert\Length(
         min: 3,
         max: 255,
@@ -50,7 +50,7 @@ class Event
     private $location;
 
     #[OneToMany(targetEntity: Sector::class, mappedBy: 'event')]
-    private Collection $sectors;    
+    private Collection $sectors;
 
     #[OneToMany(targetEntity: Place::class, mappedBy: 'event')]
     private Collection $places;
@@ -217,5 +217,4 @@ class Event
 
         return $this;
     }
-
 }

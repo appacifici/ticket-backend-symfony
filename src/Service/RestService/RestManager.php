@@ -72,16 +72,16 @@ class RestManager
         return new \stdClass();
     }
 
-    public function customProcessRequest( $method, string $endPoint, int $id = null): object
+    public function customProcessRequest($method, string $endPoint, int $id = null): object
     {
         $this->generateClass($endPoint);
 
-        switch ($method ) {            
-            case 'POST':                                
+        switch ($method) {
+            case 'POST':
                 parse_str($_SERVER['argv'][0], $queryArray);
                 $input = ( (object)$queryArray);
                 return $this->serviceClass->insertPushReport($input);
-            break;         
+            break;
             default:
                 echo "Not Found";
                 break;
@@ -94,7 +94,7 @@ class RestManager
      */
     public function generateClass(string $endPoint): void
     {
-        switch ($endPoint) {         
+        switch ($endPoint) {
             case 'pushReport':
                 $this->serviceClass = $this->container->get('app.pushReport');
                 break;

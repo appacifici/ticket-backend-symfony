@@ -28,7 +28,7 @@ class Ticket
     #[ManyToOne(targetEntity: Location::class, inversedBy: 'tickets')]
     #[JoinColumn(name: 'event_id', referencedColumnName: 'id')]
     private $event;
-    
+
     #[OneToOne(targetEntity: Place::class, inversedBy: 'ticket')]
     #[JoinColumn(name: 'place_id', referencedColumnName: 'id')]
     private $place;
@@ -97,6 +97,4 @@ class Ticket
 
         return $this;
     }
-
-
 }

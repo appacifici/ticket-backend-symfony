@@ -39,10 +39,10 @@ class Sector
     #[ORM\Column(name:"total", type:"smallint", length: 255)]
     private $total;
 
-    #[ORM\Column(name:"purchased",type:"smallint", length: 255)]
+    #[ORM\Column(name:"purchased", type:"smallint", length: 255)]
     private $purchased;
 
-    #[ORM\Column(name:"place_type",type:"smallint", length: 1)]
+    #[ORM\Column(name:"place_type", type:"smallint", length: 1)]
     private $placeType;
 
     #[ManyToOne(targetEntity: Event::class, inversedBy: 'sectors')]

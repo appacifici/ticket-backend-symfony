@@ -39,7 +39,8 @@ class Location
     #[OneToMany(targetEntity: Sector::class, mappedBy: 'location')]
     private Collection $sectors;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->sectors = new ArrayCollection();
     }
 

@@ -11,26 +11,26 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Webmozart\Assert\Assert;
 
-class TicketPurchaseDTO implements TicketPurchaseInterface {
-
+class TicketPurchaseDTO implements TicketPurchaseInterface
+{
     protected readonly Event $event;
     protected readonly Place $place;
-    protected readonly User  $user;
+    protected readonly User $user;
 
-    public function __construct( 
-        private EntityManagerInterface $doctrine )
-    {        
+    public function __construct(
+        private EntityManagerInterface $doctrine
+    ) {
     }
 
-    public function create(array $data): void 
-    {                
+    public function create(array $data): void
+    {
         Assert::notNull($data, 'eventId');
         Assert::notNull($data, 'placeId');
         Assert::notNull($data, 'userId');
 
-        $event  = $this->doctrine->getRepository( Event::class )->findOneBy( [ 'id' => $data['userId'] ] ); 
-        $place  = $this->doctrine->getRepository( Place::class )->findOneBy( [ 'id' => $data['userId'] ] ); 
-        $user   = $this->doctrine->getRepository( User::class  )->findOneBy( [ 'id' => $data['userId'] ] ); 
+        $event  = $this->doctrine->getRepository(Event::class)->findOneBy([ 'id' => $data['userId'] ]);
+        $place  = $this->doctrine->getRepository(Place::class)->findOneBy([ 'id' => $data['userId'] ]);
+        $user   = $this->doctrine->getRepository(User::class)->findOneBy([ 'id' => $data['userId'] ]);
 
         $this->event    = $event;
         $this->place    = $place;

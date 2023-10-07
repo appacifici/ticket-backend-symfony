@@ -20,28 +20,29 @@ class AlertRepository extends ServiceEntityRepository
     }
 
      /*
-     * Query che ritorna tutti i gruppi 
+     * Query che ritorna tutti i gruppi
      */
-    public function findByDate( int $typeQuery, string $limit = null, string $sort = 'desc' ) {
-        
+    public function findByDate(int $typeQuery, string $limit = null, string $sort = 'desc')
+    {
+
         $select = 'a';
-        if( $typeQuery == Alert::COUNT_QUERY ) {
+        if ($typeQuery == Alert::COUNT_QUERY) {
             $select = 'count(a) as tot';
         }
-                
+
         $query = $this->getEntityManager()->createQuery(
             "SELECT $select FROM App:Alert a ORDER BY a.createdAt $sort"
         );
-        
-        if( $limit !== null ) {
-            $aLimit = explode( ',', $limit );
-            $query->setFirstResult( (int)$aLimit[0] )->setMaxResults( (int)$aLimit[1] );  
+
+        if ($limit !== null) {
+            $aLimit = explode(',', $limit);
+            $query->setFirstResult((int)$aLimit[0])->setMaxResults((int)$aLimit[1]);
         }
-        
-        
-        try {   
-            return $query->getResult();        
-        } catch ( \Doctrine\ORM\NoResultException $e ) {
+
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
             return $e;
         }
     }

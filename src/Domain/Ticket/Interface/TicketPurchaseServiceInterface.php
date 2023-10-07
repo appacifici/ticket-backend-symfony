@@ -6,7 +6,7 @@ namespace App\Domain\Ticket\Interface;
 
 use App\Domain\Ticket\DTO\TicketPurchaseDTO;
 
-interface TicketServiceInterface {
+interface TicketPurchaseServiceInterface {
 
     /**
      * $ticketPurchases array of PurchaseDTO

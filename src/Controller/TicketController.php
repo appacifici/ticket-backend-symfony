@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Domain\Ticket\Exception\PurchaseDTOException;
-use App\Domain\Ticket\Exception\TicketSeviceException;
-use App\Domain\Ticket\Service\TicketService;
+use App\Domain\Ticket\Exception\TicketPurchaseServiceException;
+use App\Domain\Ticket\Service\TicketPurchaseService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,17 +21,17 @@ class TicketController
         Request                 $request,
         LoggerInterface         $logger,
         TicketPurchaseInterface $ticketPurchase,
-        TicketService           $ticketService        
+        TicketPurchaseService   $ticketPurchaseService        
     ) {
         try {
             $requestData        = $request->toArray();
             $ticketPurchaseDTO  = $ticketPurchase->create($requestData);
-            $ticketService->getEventTicket( $ticketPurchaseDTO );
+            $ticketPurchaseService->getEventTicket( $ticketPurchaseDTO );
         } catch( PurchaseDTOException $e ) {
             $exceptionTicketResponse = ExceptionTicketResponse::createPurchaseDTOException($e);
             $response = $exceptionTicketResponse->serialize();
-        } catch( TicketSeviceException $e ) {
-            $exceptionTicketResponse = ExceptionTicketResponse::createTicketSeviceException($e);
+        } catch( TicketPurchaseServiceException $e ) {
+            $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseServiceException($e);
             $response = $exceptionTicketResponse->serialize();
         }
         

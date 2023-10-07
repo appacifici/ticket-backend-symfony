@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Ticket\Response;
 
 use App\Domain\Ticket\Exception\PurchaseDTOException;
-use App\Domain\Ticket\Exception\TicketSeviceException;
+use App\Domain\Ticket\Exception\TicketPurchaseServiceException;
 
 class ExceptionTicketResponse 
 {
     
     private array $response;
 
-    public static function createTicketSeviceException( TicketSeviceException $e ): self {
+    public static function createTicketPurchaseServiceException( TicketPurchaseServiceException $e ): self {
         $self                                   = new self();
         $self->response['success']              = false;
         $self->response['error']['event']       = $e->getEvent()->getName().' - '.$e->getEvent()->getLocation()->getName().' - '.$e->getEvent()->getDate()->format('Y-m-d H:i:s');

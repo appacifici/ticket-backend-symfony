@@ -26,8 +26,9 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
         
         $ticketSeviceException =  new PurchaseDTOException('Invalid format request ticket');
 
-        if( empty( $data['userId'] ) || !is_int($data['userId']) ) {                   
-            $ticketSeviceException->setUserId($data['userId']);     
+        if( empty( $data['userId'] ) || !is_int($data['userId']) ) {      
+            $userId = $data['userId'] ?? '-';             
+            $ticketSeviceException->setUserId($userId);     
         }
         if( empty( $data['puschase'] ) || !is_array( $data['puschase'] ) ) {
             $ticketSeviceException->setPuschases(PurchaseDTOException::EMPTY_PURCHASE,-1);
@@ -44,6 +45,9 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
             if( empty( $puschase['eventId'] ) || !is_int($puschase['eventId']) ) {
                 $ticketSeviceException->setPuschases(PurchaseDTOException::PURCHASE_MISSING_EVENT_ID, $key);
             }            
+            if( empty( $puschase['sectorId'] ) || !is_int($puschase['sectorId']) ) {
+                $ticketSeviceException->setPuschases(PurchaseDTOException::PURCHASE_MISSING_SECTOR_ID, $key);
+            }            
         }
 
         if( $ticketSeviceException->hasException() ) {
@@ -51,13 +55,14 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
         }
         
         $purchaseData = [];
-        foreach($data['puschase'] AS $puschase) {            
+        foreach($data['puschase'] AS $index => $puschase) {            
             $purchaseDTO                  = new PurchaseDTO($this->doctrine);
             $purchaseData['userId']       = $data['userId'];
             $purchaseData['eventId']      = $puschase['eventId'];
+            $purchaseData['sectorId']     = $puschase['sectorId'];
             $purchaseData['placeId']      = $this->checkPurchasePlaceIdRequired($puschase['placeType']) === true ? $puschase['placeId'] : null;
             $purchaseData['placeType']    = $puschase['placeType'];            
-            $this->purchaseInterfaces[]   = $purchaseDTO->create($purchaseData);        
+            $this->purchaseInterfaces[]   = $purchaseDTO->create($purchaseData, $index);        
         }
         
         $this->finalPurchaseInterfaces = $this->purchaseInterfaces;

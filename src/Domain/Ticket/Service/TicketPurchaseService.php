@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\Domain\Ticket\Service;
 
+use App\Domain\Sector\Service\SectorService;
 use App\Domain\Ticket\DTO\TicketPurchaseDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Domain\Ticket\Exception\TicketPurchaseServiceException;
 use App\Domain\Ticket\Interface\TicketPurchaseServiceInterface;
 
+/**
+ * Classe spacifica che gestisce il solo processo di acquisti dei biglietti
+ * Potendo crescere di molto ho preferito fare un servizio specifico a differenza del servizio globale per il domain Sector
+ */
 class TicketPurchaseService implements TicketPurchaseServiceInterface {
 
     /**
@@ -17,14 +22,16 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
      * l'utente premium puo acquistare fino a 5 biglietti, oppure quello base non può acquistare più di un evento, quindi per mancanza di tempo faccio
      * una cosa base lavorando con semplici costanti, che però inserisco nel servizio che si occupera dei controlli necessari per procedere all'acquisto
      */
-    const MAX_TICKET_TRANSACTION = 3;
+    const MAX_TICKET_TRANSACTION = 4;
     const MAX_EVENT_TRANSACTION  = 2;
 
     private array $events;
-    private array $ticketFromEvent;
+    private array $ticketForEvent;
+    private array $ticketForSectorEvent;
 
     public function __construct(
-        private EntityManagerInterface $doctrine
+        private EntityManagerInterface $doctrine,
+        private SectorService $sectorService
     )
     {                
     }
@@ -35,9 +42,12 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
     public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ): bool {
         $purchases = $ticketPurchases->getPurchases();
         foreach( $purchases AS $purchase ) {
-            $eventId                 = $purchase->getEvent()->getId();
-            $this->events[$eventId]  = $purchase->getEvent();            
-            $this->ticketFromEvent[$eventId] = isset($this->ticketFromEvent[$eventId]) ? $this->ticketFromEvent[$eventId]+1 : 1;
+            $eventId                                            = $purchase->getEvent()->getId();
+            $sectorId                                           = $purchase->getSector()->getId();
+            $this->events[$eventId]                             = $purchase->getEvent();            
+            $this->ticketForSectorEvent[$sectorId]['entity']    = $purchase->getSector();            
+            $this->ticketForSectorEvent[$sectorId]['count']     = isset($this->ticketForSectorEvent[$sectorId]['count']) ? $this->ticketForSectorEvent[$sectorId]['count']+1 : 1;            
+            $this->ticketForEvent[$eventId]                     = isset($this->ticketForEvent[$eventId]) ? $this->ticketForEvent[$eventId]+1 : 1;
         }        
 
         if( $this->checkLimitPurchase() === true ) {
@@ -50,31 +60,38 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */
     private function checkLimitPurchase(): bool {
-        if( self::MAX_EVENT_TRANSACTION != -1 && count( $this->ticketFromEvent ) > self::MAX_EVENT_TRANSACTION ) {
+        if( self::MAX_EVENT_TRANSACTION != -1 && count( $this->ticketForEvent ) > self::MAX_EVENT_TRANSACTION ) {
             $ticketPurchaseServiceException =  new TicketPurchaseServiceException('Ticket for event Limit Exceeded');        
             $ticketPurchaseServiceException->setErrorCode( self::MAX_EVENT_TRANSACTION );    
             throw $ticketPurchaseServiceException;
         }
 
-        foreach( $this->ticketFromEvent AS $eventId => $total )
-        if( self::MAX_TICKET_TRANSACTION != -1 && $total > self::MAX_TICKET_TRANSACTION ) {
-            // throw new CustomException('Ticket for event Limit Exceeded');
-            $ticketPurchaseServiceException =  new TicketPurchaseServiceException('Ticket for event Limit Exceeded');
-            $ticketPurchaseServiceException->setEvent( $this->events[$eventId] );
-            $ticketPurchaseServiceException->setErrorCode( self::MAX_TICKET_TRANSACTION );
-            throw $ticketPurchaseServiceException;
-        }
+        foreach( $this->ticketForEvent AS $eventId => $total ) {
+            if( self::MAX_TICKET_TRANSACTION != -1 && $total > self::MAX_TICKET_TRANSACTION ) {
+                // throw new CustomException('Ticket for event Limit Exceeded');
+                $ticketPurchaseServiceException =  new TicketPurchaseServiceException('Ticket for event Limit Exceeded');
+                $ticketPurchaseServiceException->setEvent( $this->events[$eventId] );
+                $ticketPurchaseServiceException->setErrorCode( self::MAX_TICKET_TRANSACTION );
+                throw $ticketPurchaseServiceException;
+            }
+        }        
         return true;
     }
 
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */
-    private function ticketsSoldOut($purchases): bool {        
-        //Controllare disponibilità posti su tabella sectors controllando che purchased sia inferiore a total
+    private function ticketsSoldOut($purchases): bool {                
+        foreach( $this->ticketForSectorEvent AS $sector ) {         
+            $this->sectorService->ticketsSoldOut( $sector['entity'], $sector['count'] );
+        }
+
+
+
         //Se placeType = 2 scalare totale posti liberi da sector e mettere campo free di places a 0
 
         //TODO: Creare Domain Place e Servizio con Interfaccia per recupero 
+        exit;
         return true;
     }
 

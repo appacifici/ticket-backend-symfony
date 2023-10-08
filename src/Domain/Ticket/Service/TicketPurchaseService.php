@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Ticket\Service;
 
+use App\Domain\Email\Service\EmailService;
 use App\Domain\Sector\Service\SectorService;
 use App\Domain\Ticket\DTO\TicketPurchaseDTO;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,6 +39,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
         private SectorService $sectorService,
         private PlaceService $placeService,
         private TicketService $ticketService,
+        private EmailService $emailService,
     )
     {                
     }
@@ -109,6 +111,9 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
             throw new Exception('Internal query error'. $e->getMessage());
         }
 
+
+        $this->emailService->sendEmail();
+
         return true;
     }
 
@@ -156,6 +161,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
         if( $sectorServiceException->hasException() === true ) {            
             return $sectorServiceException;
         }
+
         return true;
     }
 

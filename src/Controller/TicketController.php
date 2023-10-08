@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
 use App\Domain\Ticket\Interface\TicketPurchaseInterface;
 use App\Domain\Ticket\Response\ExceptionTicketResponse;
+use App\Domain\Sector\Exception\SectorServiceException;
+use App\Domain\Ticket\Response\ExceptionSectorResponse;
 
 class TicketController
 {
@@ -33,8 +35,10 @@ class TicketController
         } catch( TicketPurchaseServiceException $e ) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseServiceException($e);
             $response = $exceptionTicketResponse->serialize();
-        }
-        
+        } catch( SectorServiceException $e ) {
+            $exceptionTicketResponse = ExceptionSectorResponse::createSectorServiceException($e);
+            $response = $exceptionTicketResponse->serialize();
+        }       
         return new JsonResponse($response);
     }
 }

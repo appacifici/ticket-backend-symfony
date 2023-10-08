@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\SectorAreaRepository;
+use App\Repository\SectorRepository;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\SmallIntType;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 
 #[ORM\Table(name: "sectors")]
 #[ORM\UniqueConstraint(name: "unq_sector", columns: ["name","location_id","event_id"])]
-#[ORM\Entity(repositoryClass: SectorAreaRepository::class)]
+#[ORM\Entity(repositoryClass: SectorRepository::class)]
 class Sector
 {
     const FREE_PLACE        = 1;
@@ -78,36 +76,36 @@ class Sector
         return $this;
     }
 
-    public function getTotal(): ?string
+    public function getTotal(): ?int
     {
         return $this->total;
     }
 
-    public function setTotal(string $total): self
+    public function setTotal(int $total): self
     {
         $this->total = $total;
 
         return $this;
     }
 
-    public function getPurchased(): ?string
+    public function getPurchased(): ?int
     {
         return $this->purchased;
     }
 
-    public function setPurchased(string $purchased): self
+    public function setPurchased(int $purchased): self
     {
         $this->purchased = $purchased;
 
         return $this;
     }
 
-    public function getPlaceType(): ?string
+    public function getPlaceType(): ?int
     {
         return $this->placeType;
     }
 
-    public function setPlaceType(string $placeType): self
+    public function setPlaceType(int $placeType): self
     {
         $this->placeType = $placeType;
 

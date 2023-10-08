@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
 use App\Domain\Ticket\Exception\TicketSectorException;
 use App\Domain\Ticket\Interface\TicketPurchaseServiceInterface;
+use App\Domain\Place\Service\PlaceService;
+use Exception;
 
 /**
  * Classe spacifica che gestisce il solo processo di acquisti dei biglietti
@@ -32,12 +34,14 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
 
     public function __construct(
         private EntityManagerInterface $doctrine,
-        private SectorService $sectorService
+        private SectorService $sectorService,
+        private PlaceService $placeService
     )
     {                
     }
 
     /**
+     * Metodo principale che si occupa dell'acquisto dei biglietti 
      * $ticketPurchases array of PurchaseDTO
      */
     public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ): bool {
@@ -51,27 +55,55 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
             $this->ticketForEvent[$eventId]                     = isset($this->ticketForEvent[$eventId]) ? $this->ticketForEvent[$eventId]+1 : 1;
         }        
 
-        if( !$this->checkLimitPurchase() instanceof TicketPurchaseLimitException ) {
-            $sectorsSoldOut = $this->ticketsSoldOut($purchases);
-            foreach( $sectorsSoldOut AS $sectorSoldOut ) {
-                switch( $sectorSoldOut['code'] ) {
-                    case SectorService::TICKET_SOLD_OUT:
-                    case SectorService::TICKET_SECTOR_SOLD_OUT:
-                        $sectorServiceException = new TicketSectorException();       
-                        $sectorServiceException->addItemListException(TicketSectorException::TICKET_SOLD_OUT);    
-                        $sectorServiceException->setSector($sectorSoldOut['sector']);  
-                    break;
-                }
-            }
-
-            if( $sectorServiceException->hasException() === true ) {
-                throw $sectorServiceException;
-            }
-
-            exit;
-        } else {
+        /*
+            Lancia eccezione qui e non nella funzione privata in questo questo è il metodo centrale che gestisce la logica di acquisti 
+            e solo lui deve sapere se lanciarla o gestirla in altro modo
+        */
+        if( $this->checkLimitPurchase() instanceof TicketPurchaseLimitException ) {
             throw $this->checkLimitPurchase();
         }
+
+
+        /*
+          Verifica se sono terminati tutti i biglietti, o i biglietti del settore richiesto in maniera separata,
+          in modo fda fornire una risposta completa per permettere al frontend in caso di segnalare all'utente 
+          di acquistare in un altro settore o che propro sono sold out
+        */
+        $sectorsSoldOut         = $this->ticketsSoldOut($purchases);
+        $sectorServiceException = new TicketSectorException(); 
+        foreach( $sectorsSoldOut AS $sectorSoldOut ) {
+            switch( $sectorSoldOut['code'] ) {
+                case SectorService::TICKET_SOLD_OUT:
+                case SectorService::TICKET_SECTOR_SOLD_OUT:                          
+                    $sectorServiceException->addItemListException(TicketSectorException::TICKET_SOLD_OUT);    
+                    $sectorServiceException->setSector($sectorSoldOut['sector']);  
+                break;
+            }
+        }
+        if( $sectorServiceException->hasException() === true ) {
+            throw $sectorServiceException;
+        }
+
+        //In caso si verifichi un eccezione durante i processi nel try e parta un eccezione generica andra ad effettuare il rallback del db per non creare inconsistenze                      
+        $this->doctrine->getConnection()->beginTransaction(); 
+        try{
+            foreach( $purchases AS $purchase ) {
+                if( !empty( $purchase->getPlace() ) ) {
+                    $this->placeService->setNotFree($purchase->getPlace());
+                }                        
+            }
+
+            foreach( $this->ticketForSectorEvent AS $aSector ) {            
+                $this->sectorService->setPurchased( $aSector['entity'], $aSector['count'] );                
+            }
+            $this->doctrine->getConnection()->commit(); 
+            
+        } catch (\Exception $e) {
+            $this->doctrine->getConnection()->rollBack();
+            throw new Exception('Internal query error'. $e->getMessage());
+        }
+        
+        
 
 
 
@@ -90,7 +122,6 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
 
         foreach( $this->ticketForEvent AS $eventId => $total ) {
             if( self::MAX_TICKET_TRANSACTION != -1 && $total > self::MAX_TICKET_TRANSACTION ) {
-                // throw new CustomException('Ticket for event Limit Exceeded');
                 $ticketPurchaseLimitException =  new TicketPurchaseLimitException('Ticket for event Limit Exceeded');
                 $ticketPurchaseLimitException->setEvent( $this->events[$eventId] );
                 $ticketPurchaseLimitException->setErrorCode( self::MAX_TICKET_TRANSACTION );

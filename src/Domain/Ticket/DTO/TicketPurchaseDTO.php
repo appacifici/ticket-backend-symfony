@@ -28,7 +28,7 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
 
         if( empty( $data['userId'] ) || !is_int($data['userId']) ) {      
             $userId = $data['userId'] ?? '-';             
-            $ticketSeviceException->setUserId($userId);     
+            $ticketSeviceException->setUserId($userId, 0);     
         }
         if( empty( $data['puschase'] ) || !is_array( $data['puschase'] ) ) {
             $ticketSeviceException->setPuschases(TicketPurchaseDTOException::EMPTY_PURCHASE,-1);

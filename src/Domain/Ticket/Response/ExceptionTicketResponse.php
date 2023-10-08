@@ -7,6 +7,7 @@ namespace App\Domain\Ticket\Response;
 use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
 use App\Domain\Ticket\Exception\TicketSectorException;
+use Exception;
 
 class ExceptionTicketResponse 
 {    
@@ -93,6 +94,16 @@ class ExceptionTicketResponse
             $self->response['errors'][$i]['sector']['name']         = $e->getSector()->getName();
             $self->response['errors'][$i]['sector']['eventId']      = $e->getSector()->getEvent()->getId();
         }
+                        
+        return $self;
+    }
+
+    public static function createTicketGenericException( Exception $e ): self {
+
+        $self                                                   = new self();
+        $self->response['success']                              = false;     
+        $self->response['errors'][0]['message']                 = $e->getMessage();
+        $self->response['errors'][0]['code']                    = 500;            
                         
         return $self;
     }

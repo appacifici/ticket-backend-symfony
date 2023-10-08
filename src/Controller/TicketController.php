@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Ticket\Interface\TicketPurchaseInterface;
 use App\Domain\Ticket\Response\ExceptionTicketResponse;
 use App\Domain\Ticket\Exception\TicketSectorException;
+use Exception;
 
 class TicketController
 {
@@ -36,6 +37,9 @@ class TicketController
             $response = $exceptionTicketResponse->serialize();
         } catch( TicketSectorException $e ) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketSectorException($e);
+            $response = $exceptionTicketResponse->serialize();
+        } catch( Exception $e ) {
+            $exceptionTicketResponse = ExceptionTicketResponse::createTicketGenericException($e);
             $response = $exceptionTicketResponse->serialize();
         }
         

@@ -33,7 +33,7 @@ class Place
     #[ORM\Column(name:"price", type:"smallint", length: 255)]
     private $total;
 
-    #[ORM\Column(name:"free", type:"smallint", length: 1)]
+    #[ORM\Column(name:"free", type:"smallint", length: 1, options: ["default" => 1])]
     private $free;
 
     #[ManyToOne(targetEntity: Event::class, inversedBy: 'places')]

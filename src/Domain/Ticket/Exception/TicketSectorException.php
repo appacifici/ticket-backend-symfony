@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Sector\Exception;
+namespace App\Domain\Ticket\Exception;
 
 use App\Entity\Sector;
 use Exception;
 
-class SectorServiceException extends Exception
+class TicketSectorException extends Exception
 {
 	const TICKET_SOLD_OUT 	 				= 1;	
 	const TICKET_SECTOR_SOLD_OUT			= 2;	

@@ -6,7 +6,7 @@ namespace App\Domain\Ticket\Exception;
 
 use Exception;
 
-class PurchaseDTOException extends Exception
+class TicketPurchaseDTOException extends Exception
 {
 
 	const EMPTY_USER_ID 	 			= 1;

@@ -10,7 +10,7 @@ use App\Entity\Place;
 use App\Entity\Sector;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Domain\Ticket\Exception\PurchaseDTOException;
+use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 
 class PurchaseDTO implements PurchaseInterface
 {
@@ -27,7 +27,7 @@ class PurchaseDTO implements PurchaseInterface
 
     public function create(array $data, int $index): self
     {        
-        $ticketSeviceException =  new PurchaseDTOException('Invalid get entity whit request ticket');
+        $ticketSeviceException =  new TicketPurchaseDTOException('Invalid get entity whit request ticket');
 
         $user   = $this->doctrine->getRepository(User::class)->findOneBy([ 'id' => $data['userId'] ]);
         if( empty( $user ) ) {            

@@ -14,6 +14,10 @@ use App\Domain\Sector\Exception\SectorServiceException;
  */
 class SectorService  {
 
+    const TICKET_SOLD_OUT 	 				= 1;	
+	const TICKET_SECTOR_SOLD_OUT			= 2;	
+	const TICKET_SECTOR_AVAILABLE			= 3;
+
     public function __construct(
         private EntityManagerInterface $doctrine
     )
@@ -23,24 +27,16 @@ class SectorService  {
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */
-    public function ticketsSoldOut( Sector $sector, int $totalPurchaseSector ): bool {        
-        $sectorServiceException = new SectorServiceException();                
-
-        if( $sector->getPurchased() == $sector->getTotal()  ) {
-            $sectorServiceException->addItemListException(SectorServiceException::TICKET_SOLD_OUT);
+    public function sectorSoldOut( Sector $sector, int $totalPurchaseSector ): int {                
+        if( $sector->getPurchased() == $sector->getTotal()  ) {            
+            return self::TICKET_SOLD_OUT;
         }
 
         $ticketAvalabilities = $sector->getTotal() - $sector->getPurchased();
         if( $totalPurchaseSector > $ticketAvalabilities ) {
-            $sectorServiceException->addItemListException(SectorServiceException::TICKET_SECTOR_SOLD_OUT);
-            $sectorServiceException->setSector($sector);
+            return self::TICKET_SECTOR_SOLD_OUT;
         }
-
-        if( $sectorServiceException->hasException() === true ) {
-            throw $sectorServiceException;
-        }
-        
-        return true;
+        return self::TICKET_SECTOR_AVAILABLE;
     }
 
 }

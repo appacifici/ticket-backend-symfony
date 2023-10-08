@@ -7,7 +7,7 @@ namespace App\Domain\Ticket\Exception;
 use App\Entity\Event;
 use Exception;
 
-class TicketPurchaseServiceException extends Exception
+class TicketPurchaseLimitException extends Exception
 {
 
 	private Event $event;

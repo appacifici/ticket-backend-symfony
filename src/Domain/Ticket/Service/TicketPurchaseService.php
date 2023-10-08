@@ -8,9 +8,10 @@ use App\Domain\Sector\Service\SectorService;
 use App\Domain\Ticket\DTO\TicketPurchaseDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
-use App\Domain\Ticket\Exception\TicketSectorException;
+use App\Domain\Ticket\Exception\TicketPurchaseSectorException;
 use App\Domain\Ticket\Interface\TicketPurchaseServiceInterface;
 use App\Domain\Place\Service\PlaceService;
+use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
 use Exception;
 
 /**
@@ -35,7 +36,8 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
     public function __construct(
         private EntityManagerInterface $doctrine,
         private SectorService $sectorService,
-        private PlaceService $placeService
+        private PlaceService $placeService,
+        private TicketService $ticketService,
     )
     {                
     }
@@ -59,53 +61,53 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
             Lancia eccezione qui e non nella funzione privata in questo questo è il metodo centrale che gestisce la logica di acquisti 
             e solo lui deve sapere se lanciarla o gestirla in altro modo
         */
-        if( $this->checkLimitPurchase() instanceof TicketPurchaseLimitException ) {
+        $checkLimitPurchase = $this->checkLimitPurchase();
+        if( $checkLimitPurchase instanceof TicketPurchaseLimitException ) {
             throw $this->checkLimitPurchase();
         }
 
+        $ticketsSoldOut = $this->ticketsSoldOut($purchases);
+        if( $ticketsSoldOut instanceof TicketPurchaseSectorException ) {
+            throw $ticketsSoldOut;
+        }
 
-        /*
-          Verifica se sono terminati tutti i biglietti, o i biglietti del settore richiesto in maniera separata,
-          in modo fda fornire una risposta completa per permettere al frontend in caso di segnalare all'utente 
-          di acquistare in un altro settore o che propro sono sold out
-        */
-        $sectorsSoldOut         = $this->ticketsSoldOut($purchases);
-        $sectorServiceException = new TicketSectorException(); 
-        foreach( $sectorsSoldOut AS $sectorSoldOut ) {
-            switch( $sectorSoldOut['code'] ) {
-                case SectorService::TICKET_SOLD_OUT:
-                case SectorService::TICKET_SECTOR_SOLD_OUT:                          
-                    $sectorServiceException->addItemListException(TicketSectorException::TICKET_SOLD_OUT);    
-                    $sectorServiceException->setSector($sectorSoldOut['sector']);  
-                break;
-            }
+
+        $ticketPlaceFree = $this->ticketPlaceFree($purchases);
+        if( $ticketPlaceFree instanceof TicketPurchasePlaceException ) {            
+            throw $ticketPlaceFree;
         }
-        if( $sectorServiceException->hasException() === true ) {
-            throw $sectorServiceException;
-        }
+
 
         //In caso si verifichi un eccezione durante i processi nel try e parta un eccezione generica andra ad effettuare il rallback del db per non creare inconsistenze                      
         $this->doctrine->getConnection()->beginTransaction(); 
-        try{
-            foreach( $purchases AS $purchase ) {
-                if( !empty( $purchase->getPlace() ) ) {
-                    $this->placeService->setNotFree($purchase->getPlace());
-                }                        
-            }
+        try{            
 
             foreach( $this->ticketForSectorEvent AS $aSector ) {            
                 $this->sectorService->setPurchased( $aSector['entity'], $aSector['count'] );                
             }
+
+            $ticketIndex = 1;
+            foreach( $purchases AS $purchase ) {
+                if( !empty( $purchase->getPlace() ) ) {
+                    $this->placeService->setNotFree($purchase->getPlace());
+                }                        
+
+                $this->ticketService->generateTicket(
+                    $purchase->getEvent(),
+                    $purchase->getSector(),
+                    $purchase->getPlace(),
+                    $purchase->getUser(),
+                    $ticketIndex
+                );
+                $ticketIndex++;
+            }          
+
             $this->doctrine->getConnection()->commit(); 
             
         } catch (\Exception $e) {
             $this->doctrine->getConnection()->rollBack();
             throw new Exception('Internal query error'. $e->getMessage());
         }
-        
-        
-
-
 
         return true;
     }
@@ -131,19 +133,46 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
         return true;
     }
 
-    /**
-     * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
-     * return $sectorSoldOut array of Sector
-     */
-    private function ticketsSoldOut(): array {        
+    /** 
+     *  Verifica se sono terminati tutti i biglietti, o i biglietti del settore richiesto in maniera separata,
+     *  in modo da fornire una risposta completa per permettere al frontend in caso di segnalare all'utente 
+     *  di acquistare in un altro settore o che propro sono sold out
+    */
+    private function ticketsSoldOut(): bool | TicketPurchaseSectorException {        
         $sectorSoldOut = [];        
         $i = 0;
+        
+        $sectorServiceException = new TicketPurchaseSectorException(); 
         foreach( $this->ticketForSectorEvent AS $sector ) {         
-            $sectorSoludOutCode = $this->sectorService->sectorSoldOut( $sector['entity'], $sector['count'] );
-            $sectorSoldOut[$i]['sector']    = $sector['entity'];
-            $sectorSoldOut[$i]['code']      = $sectorSoludOutCode;
+            $sectorSoludOutCode = $this->sectorService->sectorSoldOut( $sector['entity'], $sector['count'] );            
+            switch( $sectorSoludOutCode ) {
+                case SectorService::TICKET_SOLD_OUT:
+                case SectorService::TICKET_SECTOR_SOLD_OUT:                          
+                    $sectorServiceException->addItemListException(TicketPurchaseSectorException::TICKET_SOLD_OUT, $sector['entity']);                        
+                break;
+            }
+        }        
+        
+        if( $sectorServiceException->hasException() === true ) {            
+            return $sectorServiceException;
         }
-        return $sectorSoldOut;
+        return true;
+    }
+
+    private function ticketPlaceFree(array $purchases ): bool|TicketPurchasePlaceException {
+        $ticketPurchasePlaceException = new TicketPurchasePlaceException;
+        foreach( $purchases AS $purchase ) {
+            if( !is_null( $purchase->getPlace() ) ) {                                                
+                if( $purchase->getPlace()->getFree() == PlaceService::PLACE_NOT_FREE ) {                    
+                    $ticketPurchasePlaceException->addItemListException(TicketPurchasePlaceException::PLACE_NOT_FREE, $purchase->getPlace());                    
+                }                    
+            }            
+        }
+        
+        if( $ticketPurchasePlaceException->hasException() === true ) {
+            return $ticketPurchasePlaceException;
+        }
+        return true;
     }
 
 }

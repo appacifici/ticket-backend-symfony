@@ -9,9 +9,10 @@ use App\Repository\TicketRepository;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToOne;
+use App\Entity\Sector;
 
 #[ORM\Table(name: "ticket")]
-#[ORM\UniqueConstraint(name: "unq_ticket", columns: ["code","event_id"])]
+#[ORM\UniqueConstraint(name: "unq_ticket", columns: ["code","sector_id","event_id"])]
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
 {
@@ -25,13 +26,21 @@ class Ticket
     #[ORM\Column(name:"code", length: 150)]
     private string $code;
 
-    #[ManyToOne(targetEntity: Location::class, inversedBy: 'tickets')]
+    #[ManyToOne(targetEntity: Event::class, inversedBy: 'tickets')]
     #[JoinColumn(name: 'event_id', referencedColumnName: 'id')]
     private $event;
 
-    #[OneToOne(targetEntity: Place::class, inversedBy: 'ticket')]
+    #[ManyToOne(targetEntity: Sector::class, inversedBy: 'tickets')]
+    #[JoinColumn(name: 'sector_id', referencedColumnName: 'id')]
+    private $sector;
+
+    #[ManyToOne(targetEntity: Place::class, inversedBy: 'ticket')]
     #[JoinColumn(name: 'place_id', referencedColumnName: 'id')]
     private $place;
+
+    #[ManyToOne(targetEntity: User::class)]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    private $user;
 
     public function getId(): ?int
     {
@@ -74,14 +83,26 @@ class Ticket
         return $this;
     }
 
-    public function getEvent(): ?Location
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
 
-    public function setEvent(?Location $event): self
+    public function setEvent(Event $event): self
     {
         $this->event = $event;
+
+        return $this;
+    }
+
+    public function getSector(): Sector
+    {
+        return $this->sector;
+    }
+
+    public function setSector(Sector $sector): self
+    {
+        $this->sector = $sector;
 
         return $this;
     }
@@ -94,6 +115,18 @@ class Ticket
     public function setPlace(?Place $place): self
     {
         $this->place = $place;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

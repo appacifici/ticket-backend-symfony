@@ -6,7 +6,8 @@ namespace App\Domain\Ticket\Response;
 
 use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
-use App\Domain\Ticket\Exception\TicketSectorException;
+use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
+use App\Domain\Ticket\Exception\TicketPurchaseSectorException;
 use Exception;
 
 class ExceptionTicketResponse 
@@ -81,18 +82,40 @@ class ExceptionTicketResponse
         return $self;
     }
 
-    public static function createTicketSectorException( TicketSectorException $e ): self {
+    public static function createTicketPurchaseSectorException( TicketPurchaseSectorException $e ): self {
 
         $self                                   = new self();
         $self->response['success']              = false;
 
         $i = 0;
-        foreach( $e->getListException() AS $code ) {            
-            $self->response['errors'][$i]['message']                = TicketSectorException::SECTOR_ERROR_MESSAGE[$code];
-            $self->response['errors'][$i]['code']                   = $code;
-            $self->response['errors'][$i]['sector']['id']           = $e->getSector()->getId();
-            $self->response['errors'][$i]['sector']['name']         = $e->getSector()->getName();
-            $self->response['errors'][$i]['sector']['eventId']      = $e->getSector()->getEvent()->getId();
+        foreach( $e->getListException() AS $item ) {            
+            $sector                                                 = $item['sector'];
+            $self->response['errors'][$i]['message']                = TicketPurchaseSectorException::SECTOR_ERROR_MESSAGE[$item['code']];
+            $self->response['errors'][$i]['code']                   = $item['code'];
+            $self->response['errors'][$i]['sector']['id']           = $sector->getId();
+            $self->response['errors'][$i]['sector']['name']         = $sector->getName();
+            $self->response['errors'][$i]['sector']['eventId']      = $sector->getEvent()->getId();
+            $i++;
+        }
+                        
+        return $self;
+    }
+
+    public static function createTicketPurchasePlaceException( TicketPurchasePlaceException $e ): self {
+
+        $self                                   = new self();
+        $self->response['success']              = false;
+
+        $i = 0;
+
+        foreach( $e->getListException() AS $item ) {          
+            $place                                                  = $item['place'];
+            $self->response['errors'][$i]['message']                = TicketPurchasePlaceException::PLACE_ERROR_MESSAGE[$item['code']];
+            $self->response['errors'][$i]['code']                   = $item['code'];
+            $self->response['errors'][$i]['place']['id']            = $place->getId();
+            $self->response['errors'][$i]['place']['name']          = 'Line: '.$place->getLine().' - Number: '.$place->getNumber();            
+            $self->response['errors'][$i]['place']['eventId']       = $place->getEvent()->getId();
+            $i++;
         }
                         
         return $self;

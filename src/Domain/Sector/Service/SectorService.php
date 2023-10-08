@@ -24,6 +24,9 @@ class SectorService implements SectorServiceInterface {
     {                
     }
 
+    /**
+     * Setta a db il campo purchased
+     */
     public function setPurchased( Sector $sector, int $purchased ): void {
         $sector->setPurchased( $sector->getPurchased() + $purchased );
         $this->doctrine->persist($sector);
@@ -33,7 +36,8 @@ class SectorService implements SectorServiceInterface {
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */
-    public function sectorSoldOut( Sector $sector, int $totalPurchaseSector ): int {                
+    public function sectorSoldOut( Sector $sector, int $totalPurchaseSector ): int {      
+        //echo $sector->getId().' ==> '.$sector->getPurchased() .'=='. $sector->getTotal()."\n";
         if( $sector->getPurchased() == $sector->getTotal()  ) {            
             return self::TICKET_SOLD_OUT;
         }

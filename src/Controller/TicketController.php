@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
+use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
 use App\Domain\Ticket\Service\TicketPurchaseService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
 use App\Domain\Ticket\Interface\TicketPurchaseInterface;
 use App\Domain\Ticket\Response\ExceptionTicketResponse;
-use App\Domain\Ticket\Exception\TicketSectorException;
+use App\Domain\Ticket\Exception\TicketPurchaseSectorException;
 use Exception;
 
 class TicketController
@@ -35,16 +36,17 @@ class TicketController
         } catch( TicketPurchaseLimitException $e ) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseLimitException($e);
             $response = $exceptionTicketResponse->serialize();
-        } catch( TicketSectorException $e ) {
-            $exceptionTicketResponse = ExceptionTicketResponse::createTicketSectorException($e);
+        } catch( TicketPurchaseSectorException $e ) {
+            $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseSectorException($e);
+            $response = $exceptionTicketResponse->serialize();
+        } catch( TicketPurchasePlaceException $e ) {
+            $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchasePlaceException($e);
             $response = $exceptionTicketResponse->serialize();
         } catch( Exception $e ) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketGenericException($e);
             $response = $exceptionTicketResponse->serialize();
-        }
-        
+        }        
         //TODO implementare servizio Response success    
-
         return new JsonResponse($response);
     }
 }

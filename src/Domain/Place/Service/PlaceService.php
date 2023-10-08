@@ -23,6 +23,14 @@ class PlaceService implements PlaceServiceInterface {
     {                
     }
 
+    public function getIsFree( int $placeId ):bool {
+        $place = $this->doctrine->getRepository(Place::class)->findOneBy(['id' => $placeId]);
+        return $place->getFree() == 1 ? true : false;
+    }
+
+    /**
+     * Setta a db il campo free
+     */
     public function setNotFree( Place $place ) {
         $place->setFree(self::PLACE_NOT_FREE);
         $this->doctrine->persist($place);

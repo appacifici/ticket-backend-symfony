@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Ticket\Interface\TicketPurchaseInterface;
 use App\Domain\Ticket\Response\ExceptionTicketResponse;
 use App\Domain\Ticket\Exception\TicketPurchaseSectorException;
+use App\Domain\Ticket\Response\TicketPurchaseResponse;
 use Exception;
 
 class TicketController
@@ -27,9 +28,11 @@ class TicketController
         TicketPurchaseService $ticketPurchaseService
     ) {
         try {
-            $requestData        = $request->toArray();
-            $ticketPurchaseDTO  = $ticketPurchase->create($requestData);
-            $ticketPurchaseService->purchaseTicket($ticketPurchaseDTO);
+            $requestData            = $request->toArray();
+            $ticketPurchaseDTO      = $ticketPurchase->create($requestData);
+            $ticketPurchaseSuccess  = $ticketPurchaseService->purchaseTicket($ticketPurchaseDTO);
+            $ticketPurchaseResponse = TicketPurchaseResponse::ticketPurchaseSuccessResponse($ticketPurchaseSuccess);
+            $response               = $ticketPurchaseResponse->serialize(); 
         } catch (TicketPurchaseDTOException $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseDTOException($e);
             $response = $exceptionTicketResponse->serialize();
@@ -45,8 +48,7 @@ class TicketController
         } catch (Exception $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketGenericException($e);
             $response = $exceptionTicketResponse->serialize();
-        }
-        //TODO implementare servizio Response success
+        }                
         return new JsonResponse($response);
     }
 }

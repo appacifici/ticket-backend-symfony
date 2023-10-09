@@ -48,7 +48,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
      * Metodo principale che si occupa dell'acquisto dei biglietti
      * $ticketPurchases array of PurchaseDTO
      */
-    public function purchaseTicket(TicketPurchaseDTO $ticketPurchases): bool
+    public function purchaseTicket(TicketPurchaseDTO $ticketPurchases): TicketPurchaseSuccess
     {
         $purchases = $ticketPurchases->getPurchases();
         foreach ($purchases as $purchase) {
@@ -107,17 +107,18 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
                 $ticketIndex++;
             }
 
-            //$this->doctrine->getConnection()->commit();
-        } catch (\Exception $e) {
+            $this->emailService->sendTicketPusrchaseEmail($ticketPurchases, $ticketPurchaseSuccess);
+            $this->doctrine->getConnection()->commit();
+
+        } catch (Exception $e) {
+            $this->doctrine->getConnection()->rollBack();
+            throw new Exception('Internal query error' . $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
+        } catch (TransportExceptionInterface $e) {
             $this->doctrine->getConnection()->rollBack();
             throw new Exception('Internal query error' . $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
         }
 
-        $this->emailService->sendTicketPusrchaseEmail($ticketPurchases, $ticketPurchaseSuccess);
-        exit;
-
-
-        return true;
+        return $ticketPurchaseSuccess;
     }
 
     /**

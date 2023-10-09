@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @psalm-pure
- * @psalm-flow ($string) -> return
- *
- */
-function twig_raw_filter(string $string): string {}

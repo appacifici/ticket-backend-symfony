@@ -6,8 +6,6 @@ namespace App\Domain\Place\Interface;
 
 use App\Entity\Place;
 
-interface PlaceServiceInterface  {
-
-    
-
+interface PlaceServiceInterface
+{
 }

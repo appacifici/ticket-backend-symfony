@@ -2861,6 +2861,65 @@
             "install-path": "../psr/log"
         },
         {
+            "name": "rector/rector",
+            "version": "0.18.5",
+            "version_normalized": "0.18.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rectorphp/rector.git",
+                "reference": "2a3b82f317e431fc142d21f3303891a4e64c96eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/2a3b82f317e431fc142d21f3303891a4e64c96eb",
+                "reference": "2a3b82f317e431fc142d21f3303891a4e64c96eb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0",
+                "phpstan/phpstan": "^1.10.35"
+            },
+            "conflict": {
+                "rector/rector-doctrine": "*",
+                "rector/rector-downgrade-php": "*",
+                "rector/rector-phpunit": "*",
+                "rector/rector-symfony": "*"
+            },
+            "time": "2023-10-05T11:25:40+00:00",
+            "bin": [
+                "bin/rector"
+            ],
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Instant Upgrade and Automated Refactoring of any PHP code",
+            "keywords": [
+                "automation",
+                "dev",
+                "migration",
+                "refactoring"
+            ],
+            "support": {
+                "issues": "https://github.com/rectorphp/rector/issues",
+                "source": "https://github.com/rectorphp/rector/tree/0.18.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/tomasvotruba",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../rector/rector"
+        },
+        {
             "name": "sebastian/diff",
             "version": "5.0.3",
             "version_normalized": "5.0.3.0",
@@ -6677,6 +6736,7 @@
     "dev": true,
     "dev-package-names": [
         "phpstan/phpstan",
+        "rector/rector",
         "squizlabs/php_codesniffer",
         "symfony/maker-bundle",
         "symfony/web-profiler-bundle"

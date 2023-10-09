@@ -11,13 +11,12 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 use Twig\Environment;
 
-class EmailService  {
-
+class EmailService
+{
     public function __construct(
         private MailerInterface $mailer,
-        private Environment $twig        
-    )
-    {                
+        private Environment $twig
+    ) {
     }
 
     public function sendTicketPusrchaseEmail(
@@ -27,15 +26,15 @@ class EmailService  {
 
         $purchases  = $ticketPurchases->getPurchases();
         $user       = $purchases[0]->getUser();
-        $html       = $this->twig->render( "/email/tickerPurchase.html.twig" , [
-            'purchases'             => $purchases, 
+        $html       = $this->twig->render("/email/tickerPurchase.html.twig", [
+            'purchases'             => $purchases,
             'user'                  => $user,
             'ticketPurchaseSuccess' => $ticketPurchaseSuccess->getTickets()
         ]);
-        
+
         $email = (new Email())
             ->from($user->getEmail())
-            ->to('noreplay@ticket.com')            
+            ->to('noreplay@ticket.com')
             ->priority(Email::PRIORITY_HIGH)
             ->subject('Ticket.com Acquisto biglietti!')
             ->text('Sending emails is fun again!')
@@ -43,5 +42,4 @@ class EmailService  {
 
         $this->mailer->send($email);
     }
-
 }

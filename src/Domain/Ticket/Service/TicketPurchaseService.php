@@ -20,8 +20,8 @@ use Exception;
  * Classe spacifica che gestisce il solo processo di acquisti dei biglietti
  * Potendo crescere di molto ho preferito fare un servizio specifico a differenza del servizio globale per il domain Sector
  */
-class TicketPurchaseService implements TicketPurchaseServiceInterface {
-
+class TicketPurchaseService implements TicketPurchaseServiceInterface
+{
     /**
      * Ho messo i limiti come costanti in quanto pensando ad uno sviluppo successivo del sistema la maniera più corretta sarebbe creare un altra entita
      * che gestisca questo tipo di filtro, pensando magari che in base all'utente se base o premium possano avere diverse opzioni di scelta dove magari
@@ -30,7 +30,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
      */
     const MAX_TICKET_TRANSACTION = 4;
     const MAX_EVENT_TRANSACTION  = 2;
-    	    
+
     private array $events;
     private array $ticketForEvent;
     private array $ticketForSectorEvent;
@@ -41,61 +41,60 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
         private PlaceService $placeService,
         private TicketService $ticketService,
         private EmailService $emailService,
-    )
-    {                
+    ) {
     }
 
     /**
-     * Metodo principale che si occupa dell'acquisto dei biglietti 
+     * Metodo principale che si occupa dell'acquisto dei biglietti
      * $ticketPurchases array of PurchaseDTO
      */
-    public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ): bool {        
+    public function purchaseTicket(TicketPurchaseDTO $ticketPurchases): bool
+    {
         $purchases = $ticketPurchases->getPurchases();
-        foreach( $purchases AS $purchase ) {
+        foreach ($purchases as $purchase) {
             $eventId                                            = $purchase->getEvent()->getId();
             $sectorId                                           = $purchase->getSector()->getId();
-            $this->events[$eventId]                             = $purchase->getEvent();            
-            $this->ticketForSectorEvent[$sectorId]['entity']    = $purchase->getSector();            
-            $this->ticketForSectorEvent[$sectorId]['count']     = isset($this->ticketForSectorEvent[$sectorId]['count']) ? $this->ticketForSectorEvent[$sectorId]['count']+1 : 1;            
-            $this->ticketForEvent[$eventId]                     = isset($this->ticketForEvent[$eventId]) ? $this->ticketForEvent[$eventId]+1 : 1;
-        }        
+            $this->events[$eventId]                             = $purchase->getEvent();
+            $this->ticketForSectorEvent[$sectorId]['entity']    = $purchase->getSector();
+            $this->ticketForSectorEvent[$sectorId]['count']     = isset($this->ticketForSectorEvent[$sectorId]['count']) ? $this->ticketForSectorEvent[$sectorId]['count'] + 1 : 1;
+            $this->ticketForEvent[$eventId]                     = isset($this->ticketForEvent[$eventId]) ? $this->ticketForEvent[$eventId] + 1 : 1;
+        }
 
         /*
-            Lancia eccezione qui e non nella funzione privata in questo questo è il metodo centrale che gestisce la logica di acquisti 
+            Lancia eccezione qui e non nella funzione privata in questo questo è il metodo centrale che gestisce la logica di acquisti
             e solo lui deve sapere se lanciarla o gestirla in altro modo
         */
         $checkLimitPurchase = $this->checkLimitPurchase();
-        if( $checkLimitPurchase instanceof TicketPurchaseLimitException ) {
+        if ($checkLimitPurchase instanceof TicketPurchaseLimitException) {
             throw $this->checkLimitPurchase();
         }
 
         $ticketsSoldOut = $this->ticketsSoldOut($purchases);
-        if( $ticketsSoldOut instanceof TicketPurchaseSectorException ) {
+        if ($ticketsSoldOut instanceof TicketPurchaseSectorException) {
             throw $ticketsSoldOut;
         }
 
 
         $ticketPlaceFree = $this->ticketPlaceFree($purchases);
-        if( $ticketPlaceFree instanceof TicketPurchasePlaceException ) {            
+        if ($ticketPlaceFree instanceof TicketPurchasePlaceException) {
             throw $ticketPlaceFree;
         }
 
 
         $ticketReport = [];
-        //In caso si verifichi un eccezione durante i processi nel try e parta un eccezione generica andra ad effettuare il rallback del db per non creare inconsistenze                      
-        $this->doctrine->getConnection()->beginTransaction(); 
-        try{            
-
-            foreach( $this->ticketForSectorEvent AS $aSector ) {            
-                $this->sectorService->setPurchased( $aSector['entity'], $aSector['count'] );                
+        //In caso si verifichi un eccezione durante i processi nel try e parta un eccezione generica andra ad effettuare il rallback del db per non creare inconsistenze
+        $this->doctrine->getConnection()->beginTransaction();
+        try {
+            foreach ($this->ticketForSectorEvent as $aSector) {
+                $this->sectorService->setPurchased($aSector['entity'], $aSector['count']);
             }
 
             $ticketIndex    = 1;
             $ticketPurchaseSuccess = new TicketPurchaseSuccess();
-            foreach( $purchases AS $purchase ) {
-                if( !empty( $purchase->getPlace() ) ) {
+            foreach ($purchases as $purchase) {
+                if (!empty($purchase->getPlace())) {
                     $this->placeService->setNotFree($purchase->getPlace());
-                }                        
+                }
 
                 $ticket = $this->ticketService->generateTicket(
                     $purchase->getEvent(),
@@ -106,18 +105,17 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
                 );
                 $ticketPurchaseSuccess->addTicket($ticket);
                 $ticketIndex++;
-            }          
+            }
 
-            //$this->doctrine->getConnection()->commit(); 
-            
+            //$this->doctrine->getConnection()->commit();
         } catch (\Exception $e) {
             $this->doctrine->getConnection()->rollBack();
-            throw new Exception('Internal query error'. $e->getMessage(). ' '.$e->getFile().' '.$e->getLine());
+            throw new Exception('Internal query error' . $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
         }
-        
-        $this->emailService->sendTicketPusrchaseEmail( $ticketPurchases, $ticketPurchaseSuccess );
+
+        $this->emailService->sendTicketPusrchaseEmail($ticketPurchases, $ticketPurchaseSuccess);
         exit;
-        
+
 
         return true;
     }
@@ -125,65 +123,67 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */
-    private function checkLimitPurchase(): bool | TicketPurchaseLimitException {
-        if( self::MAX_EVENT_TRANSACTION != -1 && count( $this->ticketForEvent ) > self::MAX_EVENT_TRANSACTION ) {
-            $ticketPurchaseLimitException =  new TicketPurchaseLimitException('Ticket for event Limit Exceeded');        
-            $ticketPurchaseLimitException->setErrorCode( self::MAX_EVENT_TRANSACTION );    
+    private function checkLimitPurchase(): bool | TicketPurchaseLimitException
+    {
+        if (self::MAX_EVENT_TRANSACTION != -1 && count($this->ticketForEvent) > self::MAX_EVENT_TRANSACTION) {
+            $ticketPurchaseLimitException =  new TicketPurchaseLimitException('Ticket for event Limit Exceeded');
+            $ticketPurchaseLimitException->setErrorCode(self::MAX_EVENT_TRANSACTION);
             return $ticketPurchaseLimitException;
         }
 
-        foreach( $this->ticketForEvent AS $eventId => $total ) {
-            if( self::MAX_TICKET_TRANSACTION != -1 && $total > self::MAX_TICKET_TRANSACTION ) {
+        foreach ($this->ticketForEvent as $eventId => $total) {
+            if (self::MAX_TICKET_TRANSACTION != -1 && $total > self::MAX_TICKET_TRANSACTION) {
                 $ticketPurchaseLimitException =  new TicketPurchaseLimitException('Ticket for event Limit Exceeded');
-                $ticketPurchaseLimitException->setEvent( $this->events[$eventId] );
-                $ticketPurchaseLimitException->setErrorCode( self::MAX_TICKET_TRANSACTION );
+                $ticketPurchaseLimitException->setEvent($this->events[$eventId]);
+                $ticketPurchaseLimitException->setErrorCode(self::MAX_TICKET_TRANSACTION);
                 return $ticketPurchaseLimitException;
             }
-        }        
+        }
         return true;
     }
 
-    /** 
+    /**
      *  Verifica se sono terminati tutti i biglietti, o i biglietti del settore richiesto in maniera separata,
-     *  in modo da fornire una risposta completa per permettere al frontend in caso di segnalare all'utente 
+     *  in modo da fornire una risposta completa per permettere al frontend in caso di segnalare all'utente
      *  di acquistare in un altro settore o che propro sono sold out
     */
-    private function ticketsSoldOut(): bool | TicketPurchaseSectorException {        
-        $sectorSoldOut = [];        
+    private function ticketsSoldOut(): bool | TicketPurchaseSectorException
+    {
+        $sectorSoldOut = [];
         $i = 0;
-        
-        $sectorServiceException = new TicketPurchaseSectorException(); 
-        foreach( $this->ticketForSectorEvent AS $sector ) {         
-            $sectorSoludOutCode = $this->sectorService->sectorSoldOut( $sector['entity'], $sector['count'] );            
-            switch( $sectorSoludOutCode ) {
+
+        $sectorServiceException = new TicketPurchaseSectorException();
+        foreach ($this->ticketForSectorEvent as $sector) {
+            $sectorSoludOutCode = $this->sectorService->sectorSoldOut($sector['entity'], $sector['count']);
+            switch ($sectorSoludOutCode) {
                 case SectorService::TICKET_SOLD_OUT:
-                case SectorService::TICKET_SECTOR_SOLD_OUT:                          
-                    $sectorServiceException->addItemListException(TicketPurchaseSectorException::TICKET_SOLD_OUT, $sector['entity']);                        
-                break;
+                case SectorService::TICKET_SECTOR_SOLD_OUT:
+                    $sectorServiceException->addItemListException(TicketPurchaseSectorException::TICKET_SOLD_OUT, $sector['entity']);
+                    break;
             }
-        }        
-        
-        if( $sectorServiceException->hasException() === true ) {            
+        }
+
+        if ($sectorServiceException->hasException() === true) {
             return $sectorServiceException;
         }
 
         return true;
     }
 
-    private function ticketPlaceFree(array $purchases ): bool|TicketPurchasePlaceException {
-        $ticketPurchasePlaceException = new TicketPurchasePlaceException;
-        foreach( $purchases AS $purchase ) {
-            if( !is_null( $purchase->getPlace() ) ) {                                                
-                if( $purchase->getPlace()->getFree() == PlaceService::PLACE_NOT_FREE ) {                    
-                    $ticketPurchasePlaceException->addItemListException(TicketPurchasePlaceException::PLACE_NOT_FREE, $purchase->getPlace());                    
-                }                    
-            }            
+    private function ticketPlaceFree(array $purchases): bool|TicketPurchasePlaceException
+    {
+        $ticketPurchasePlaceException = new TicketPurchasePlaceException();
+        foreach ($purchases as $purchase) {
+            if (!is_null($purchase->getPlace())) {
+                if ($purchase->getPlace()->getFree() == PlaceService::PLACE_NOT_FREE) {
+                    $ticketPurchasePlaceException->addItemListException(TicketPurchasePlaceException::PLACE_NOT_FREE, $purchase->getPlace());
+                }
+            }
         }
-        
-        if( $ticketPurchasePlaceException->hasException() === true ) {
+
+        if ($ticketPurchasePlaceException->hasException() === true) {
             return $ticketPurchasePlaceException;
         }
         return true;
     }
-
 }

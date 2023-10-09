@@ -6,6 +6,6 @@ namespace App\Domain\Ticket\Interface;
 
 interface TicketPurchaseInterface
 {
-    public function create(array $data): self; 
+    public function create(array $data): self;
     public function getPurchases(): array;
 }

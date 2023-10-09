@@ -406,6 +406,15 @@
                 0 => '1.0|2.0|3.0',
             ),
         ),
+        'rector/rector' => array(
+            'pretty_version' => '0.18.5',
+            'version' => '0.18.5.0',
+            'reference' => '2a3b82f317e431fc142d21f3303891a4e64c96eb',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../rector/rector',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'sebastian/diff' => array(
             'pretty_version' => '5.0.3',
             'version' => '5.0.3.0',

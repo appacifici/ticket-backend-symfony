@@ -9,38 +9,37 @@ use Exception;
 
 class TicketPurchaseLimitException extends Exception
 {
+    private Event $event;
+    private int $errorCode;
 
-	private Event $event;
-	private int   $errorCode;
+    public function errorMessage()
+    {
+        $errorMsg = 'Error on line ' . $this->getLine() . ' in ' . $this->getFile()
+        . ': <b>' . $this->getMessage() . '</b>';
+        return $errorMsg;
+    }
 
-	public function errorMessage()
-  	{
-		$errorMsg = 'Error on line ' . $this->getLine() . ' in ' . $this->getFile()
-		. ': <b>' . $this->getMessage() . '</b>';
-		return $errorMsg;
-	}
+    public function getEvent(): Event
+    {
+        return $this->event;
+    }
 
-	public function getEvent(): Event
-	{
-		return $this->event;
-	}
-	
-	public function setEvent(Event $event): self
-	{
-		$this->event = $event;
+    public function setEvent(Event $event): self
+    {
+        $this->event = $event;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getErrorCode():int
-	{
-		return $this->errorCode;
-	}
-	
-	public function setErrorCode(int $errorCode):self
-	{
-		$this->errorCode = $errorCode;
+    public function getErrorCode(): int
+    {
+        return $this->errorCode;
+    }
 
-		return $this;
-	}
+    public function setErrorCode(int $errorCode): self
+    {
+        $this->errorCode = $errorCode;
+
+        return $this;
+    }
 }

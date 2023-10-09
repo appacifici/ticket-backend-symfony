@@ -6,22 +6,21 @@ namespace App\Domain\Ticket\Object;
 
 use App\Entity\Ticket;
 
-class TicketPurchaseSuccess {
-
+class TicketPurchaseSuccess
+{
     private $tickets = [];
 
-    public function __construct(         
-    )
-    {                
+    public function __construct()
+    {
     }
 
-    public function getTickets() {
+    public function getTickets()
+    {
         return $this->tickets;
     }
 
-    public function addTicket( Ticket $ticket ) {
+    public function addTicket(Ticket $ticket)
+    {
         return $this->tickets[] = $ticket;
     }
-    
-
 }

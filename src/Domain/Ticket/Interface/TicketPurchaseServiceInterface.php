@@ -6,10 +6,10 @@ namespace App\Domain\Ticket\Interface;
 
 use App\Domain\Ticket\DTO\TicketPurchaseDTO;
 
-interface TicketPurchaseServiceInterface {
-
+interface TicketPurchaseServiceInterface
+{
     /**
      * $ticketPurchases array of PurchaseDTO
      */
-    public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ):bool;
+    public function purchaseTicket(TicketPurchaseDTO $ticketPurchases): bool;
 }

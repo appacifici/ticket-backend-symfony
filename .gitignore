@@ -1,4 +1,5 @@
 var
+vendor
 
 ###> phpstan/phpstan ###
 phpstan.neon

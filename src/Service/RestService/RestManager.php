@@ -7,13 +7,8 @@ namespace App\Service\RestService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use App\Service\UtilityService\TimeTracker;
-use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Description of DependenciesModules
- * @author alessandro
- */
 class RestManager
 {
     //Mappatura tipologie symfony con tipologie dela chiamata REST
@@ -27,11 +22,7 @@ class RestManager
         'string'            => 'string'
     ];
 
-    private $doctrine;
-    private $container;
-    private $processes;
-    private $timeTracker;
-    private $endPoint = null;
+    private $container;    
     private $serviceClass = null;
 
     public function __construct(Container $container, EntityManagerInterface $doctrine, TimeTracker $timeTracker)
@@ -95,9 +86,9 @@ class RestManager
     public function generateClass(string $endPoint): void
     {
         switch ($endPoint) {
-            case 'pushReport':
-                $this->serviceClass = $this->container->get('app.pushReport');
-                break;
+            case 'wsUser':
+                $this->serviceClass = $this->container->get( 'app.userService' );
+            break;
         }
     }
 

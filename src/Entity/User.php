@@ -17,8 +17,8 @@ class User
     ];
 
     #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
     private $id;
 
     #[Assert\NotBlank(message: 'Inserire il nome')]
@@ -84,7 +84,7 @@ class User
     #[ORM\Column(name:"password", type: "string", length: 255)]
     private $password;
 
-    public function getId(): ?string
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -148,4 +148,6 @@ class User
 
         return $this;
     }
+
+    
 }

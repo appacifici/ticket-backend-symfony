@@ -11,13 +11,9 @@ use App\Service\RestService\RestManager;
 
 class WebServicesController
 {
-    //EndPoint Rest CRUD seplice per la gestione degli utenti
-    #[Route('/user', methods: ['GET', 'POST', 'PUT', 'DELETE'], name: 'wsuser')]
-    public function userEvent(
-        RestManager $restManager
-    ) {
-
-        $response = $restManager->customProcessRequest('POST', 'user');
-        return new JsonResponse($response);
+    #[Route('/ws/user/{id}', methods: ['GET', 'POST', 'PUT', 'DELETE'], name: 'wsUser' )]
+    public function wsUser( RestManager $restManager, Request $request, int $id = null ) {        
+        $response = $restManager->processRequest( $request, 'wsUser', $id );        
+        return new JsonResponse( $response );                        
     }
 }

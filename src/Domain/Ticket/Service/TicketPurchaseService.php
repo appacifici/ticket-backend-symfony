@@ -14,6 +14,7 @@ use App\Domain\Ticket\Interface\TicketPurchaseServiceInterface;
 use App\Domain\Place\Service\PlaceService;
 use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
 use App\Domain\Ticket\Object\TicketPurchaseSuccess;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Exception;
 
 /**

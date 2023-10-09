@@ -30,7 +30,7 @@ class TicketService implements TickerServiceInterface {
     /**
      * Genera un nuovo ticket e inserisce il record nel db
      */
-    public function generateTicket( Event $event, Sector $sector, ?Place $place, User $user, int $ticketIndex ): void {
+    public function generateTicket( Event $event, Sector $sector, ?Place $place, User $user, int $ticketIndex ): Ticket {
         $code = md5($event->getId().$sector->getId().$ticketIndex.time().rand(0,1000));
 
         $ticket = new Ticket();
@@ -42,8 +42,9 @@ class TicketService implements TickerServiceInterface {
         $ticket->setuser($user);        
         $ticket->setCode($code);
         $this->doctrine->persist($ticket);
-        $this->doctrine->flush();        
-        unset($ticket);        
+        $this->doctrine->flush();                    
+
+        return $ticket;
     }
 
 }

@@ -13,6 +13,7 @@ use App\Domain\Ticket\Exception\TicketPurchaseSectorException;
 use App\Domain\Ticket\Interface\TicketPurchaseServiceInterface;
 use App\Domain\Place\Service\PlaceService;
 use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
+use App\Domain\Ticket\Object\TicketPurchaseSuccess;
 use Exception;
 
 /**
@@ -48,7 +49,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
      * Metodo principale che si occupa dell'acquisto dei biglietti 
      * $ticketPurchases array of PurchaseDTO
      */
-    public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ): bool {
+    public function purchaseTicket( TicketPurchaseDTO $ticketPurchases ): bool {        
         $purchases = $ticketPurchases->getPurchases();
         foreach( $purchases AS $purchase ) {
             $eventId                                            = $purchase->getEvent()->getId();
@@ -80,6 +81,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
         }
 
 
+        $ticketReport = [];
         //In caso si verifichi un eccezione durante i processi nel try e parta un eccezione generica andra ad effettuare il rallback del db per non creare inconsistenze                      
         $this->doctrine->getConnection()->beginTransaction(); 
         try{            
@@ -88,31 +90,34 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface {
                 $this->sectorService->setPurchased( $aSector['entity'], $aSector['count'] );                
             }
 
-            $ticketIndex = 1;
+            $ticketIndex    = 1;
+            $ticketPurchaseSuccess = new TicketPurchaseSuccess();
             foreach( $purchases AS $purchase ) {
                 if( !empty( $purchase->getPlace() ) ) {
                     $this->placeService->setNotFree($purchase->getPlace());
                 }                        
 
-                $this->ticketService->generateTicket(
+                $ticket = $this->ticketService->generateTicket(
                     $purchase->getEvent(),
                     $purchase->getSector(),
                     $purchase->getPlace(),
                     $purchase->getUser(),
                     $ticketIndex
                 );
+                $ticketPurchaseSuccess->addTicket($ticket);
                 $ticketIndex++;
             }          
 
-            $this->doctrine->getConnection()->commit(); 
+            //$this->doctrine->getConnection()->commit(); 
             
         } catch (\Exception $e) {
             $this->doctrine->getConnection()->rollBack();
-            throw new Exception('Internal query error'. $e->getMessage());
+            throw new Exception('Internal query error'. $e->getMessage(). ' '.$e->getFile().' '.$e->getLine());
         }
-
-
-        $this->emailService->sendEmail();
+        
+        $this->emailService->sendTicketPusrchaseEmail( $ticketPurchases, $ticketPurchaseSuccess );
+        exit;
+        
 
         return true;
     }

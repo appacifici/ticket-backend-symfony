@@ -1,0 +1,23 @@
+<html>
+    <h1>Gentile {{user.name}}</h1>
+    <h2 style="padding:5px; color:green">Grazie per aver acquistato i biglietti su ticket.com</h2>
+
+    <div style="font-weight:bold; margin:10px 0; border-bottom: 2px solid #000; padding-bottom:5px">Riepilogo</div>
+    {% for ticket in ticketPurchaseSuccess %}
+        <div style="background:#f4f4f4; margin-bottom:10px;padding:10px">
+            <div style="margin-bottom:10px;padding:10px">
+                <strong>Evento:</strong> {{ticket.event.name}} - <strong>Città:</strong> {{ticket.event.city}} - 
+                <strong>Data:</strong> {{ticket.event.date|date('d-m-Y')}} - <strong>Inizio:</strong> {{ticket.event.date|date('H:i')}}            
+            </div>
+            <div style="margin-bottom:10px;padding:10px">
+                <strong>Settore:</strong> {{ticket.sector.name}}<br>
+                {%if ticket.sector.placeType == 2 %}
+                    <strong>Fila:</strong>  {{ticket.place.line}} <br> <strong>Posto:</strong> {{ticket.place.number}}
+                    <br>
+                {%endif%}                
+                <strong>Ticket n°:</strong> {{ticket.code}}
+            </div>
+            <button style="padding:5px; color:green">Scarica Biglietto</button>
+        </div>
+    {%endfor%}
+</html>

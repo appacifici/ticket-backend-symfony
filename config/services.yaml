@@ -75,3 +75,7 @@ services:
     app.placeService:
         class:     App\Service\ManagerService\PlaceService      
         public: true 
+
+    app.sectorService:
+        class:     App\Service\ManagerService\SectorService      
+        public: true 

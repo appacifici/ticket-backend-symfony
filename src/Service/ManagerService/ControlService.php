@@ -3,6 +3,7 @@
 namespace App\Service\ManagerService;
 
 use App\Entity\Event;
+use App\Entity\Location;
 use App\Entity\Sector;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
@@ -242,6 +243,7 @@ class ControlService {
         }
         
         $this->response->result = true;     
+        $this->response->id = $entity->getId();
         $this->timeTracker->stop( "flushEntity" );
         
         return true;        
@@ -275,15 +277,18 @@ class ControlService {
         return true;        
     } 
     
-    protected function getRelEntity( string $entity, int $id ) : Event|Sector| bool {
+    protected function getRelEntity( string $entity, int $id ) : Event|Sector|Location|bool {
         $this->timeTracker->start( "getRelEntity", "getRelEntity" );
         try {
             switch( $entity ) {
                 case 'Event':                 
-                $entity  = $this->doctrine->getRepository( Event::class )->findOneBy( ["id"=>$id] );
+                    $entity  = $this->doctrine->getRepository( Event::class )->findOneBy( ["id"=>$id] );
                 break;
                 case 'Sector':                 
-                $entity  = $this->doctrine->getRepository( Sector::class )->findOneBy( ["id"=>$id] );
+                    $entity  = $this->doctrine->getRepository( Sector::class )->findOneBy( ["id"=>$id] );
+                break;
+                case 'Location':                 
+                    $entity  = $this->doctrine->getRepository( Location::class )->findOneBy( ["id"=>$id] );
                 break;
             }
             

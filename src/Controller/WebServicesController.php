@@ -34,4 +34,10 @@ class WebServicesController
         $response = $restManager->processRequest( $request, 'wsPlace', $id );        
         return new JsonResponse( $response );                        
     }
+
+    #[Route('/ws/sector/{id}', methods: ['GET', 'POST', 'PUT', 'DELETE'], name: 'wsSector' )]
+    public function wsSector( RestManager $restManager, Request $request, int $id = null ) {        
+        $response = $restManager->processRequest( $request, 'wsSector', $id );        
+        return new JsonResponse( $response );                        
+    }
 }

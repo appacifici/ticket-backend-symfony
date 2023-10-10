@@ -98,6 +98,9 @@ class RestManager
             case 'wsPlace':
                 $this->serviceClass = $this->container->get( 'app.placeService' );
             break;
+            case 'wsSector':
+                $this->serviceClass = $this->container->get( 'app.sectorService' );
+            break;
         }
     }
 

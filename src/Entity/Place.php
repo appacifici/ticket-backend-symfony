@@ -31,7 +31,7 @@ class Place
     private string $number;
 
     #[ORM\Column(name:"price", type:"smallint", length: 255)]
-    private $total;
+    private $price;
 
     #[ORM\Column(name:"free", type:"smallint", length: 1, options: ["default" => 1])]
     private $free;
@@ -76,14 +76,14 @@ class Place
         return $this;
     }
 
-    public function getTotal(): ?int
+    public function getPrice(): ?int
     {
-        return $this->total;
+        return $this->price;
     }
 
-    public function setTotal(int $total): self
+    public function setPrice(int $price): self
     {
-        $this->total = $total;
+        $this->price = $price;
 
         return $this;
     }

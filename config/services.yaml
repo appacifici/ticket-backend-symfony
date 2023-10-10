@@ -63,3 +63,15 @@ services:
     app.userService:
         class:     App\Service\ManagerService\UserService      
         public: true 
+        
+    app.eventService:
+        class:     App\Service\ManagerService\EventService      
+        public: true 
+
+    app.locationService:
+        class:     App\Service\ManagerService\LocationService      
+        public: true 
+
+    app.placeService:
+        class:     App\Service\ManagerService\PlaceService      
+        public: true 

@@ -37,11 +37,11 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
     private array $ticketForSectorEvent;
 
     public function __construct(
-        private EntityManagerInterface $doctrine,
-        private SectorService $sectorService,
-        private PlaceService $placeService,
-        private TicketService $ticketService,
-        private EmailService $emailService,
+        private EntityManagerInterface  $doctrine,
+        private SectorService           $sectorService,
+        private PlaceService            $placeService,
+        private TicketService           $ticketService,
+        private EmailService            $emailService,
     ) {
     }
 
@@ -75,12 +75,10 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
             throw $ticketsSoldOut;
         }
 
-
         $ticketPlaceFree = $this->ticketPlaceFree($purchases);
         if ($ticketPlaceFree instanceof TicketPurchasePlaceException) {
             throw $ticketPlaceFree;
         }
-
 
         $ticketReport = [];
         //In caso si verifichi un eccezione durante i processi nel try e parta un eccezione generica andra ad effettuare il rallback del db per non creare inconsistenze

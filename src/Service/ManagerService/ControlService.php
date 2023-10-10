@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Service\ManagerService;
+
+use App\Entity\Event;
+use App\Entity\Sector;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\Validator\Validator\ValidatorInterface as Validator;
@@ -272,6 +275,29 @@ class ControlService {
         return true;        
     } 
     
+    protected function getRelEntity( string $entity, int $id ) : Event|Sector| bool {
+        $this->timeTracker->start( "getRelEntity", "getRelEntity" );
+        try {
+            switch( $entity ) {
+                case 'Event':                 
+                $entity  = $this->doctrine->getRepository( Event::class )->findOneBy( ["id"=>$id] );
+                break;
+                case 'Sector':                 
+                $entity  = $this->doctrine->getRepository( Sector::class )->findOneBy( ["id"=>$id] );
+                break;
+            }
+            
+            if( empty( $entity )) {
+                throw new \Exception('Not found query '.$entity);
+            }
+        } catch ( \Exception $e ) {
+            $this->setDebugException( $e, 'getRelEntity' );            
+            return false;
+        } 
+        $this->timeTracker->stop( "getRelEntity" );
+        return $entity;
+    }
+
     /**
      * Inserisce nel debug i dati dell'eccezione
      * @param Exception|Throwable $e
@@ -296,7 +322,7 @@ class ControlService {
      * @param Entity $entity
      * @return bool
      */
-    protected function checkResultQuery( User | array | null | bool $entity , string $section ) :bool {
+    protected function checkResultQuery( mixed $entity , string $section ) :bool {
         if( empty( $entity ) ) {
             $this->response->result      = false;     
             $this->response->errorCode   = $this->container->getParameter( 'ws.code.notResultQuery' );   

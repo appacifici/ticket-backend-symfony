@@ -18,19 +18,19 @@ class RestManager
         'tinytint'          => 'integer',
         'smallint'          => 'integer',
         'float'             => 'double',
-        'datetime'          => 'datetime',
-        'string'            => 'string'
+        'datetime'          => 'string',
+        'string'            => 'string',
+        'datetime_immutable'=> 'string'
     ];
+ 
+    private $serviceClass   = null;
+    private $processes      = [];
 
-    private $container;    
-    private $serviceClass = null;
-
-    public function __construct(Container $container, EntityManagerInterface $doctrine, TimeTracker $timeTracker)
-    {
-        $this->container    = $container;
-        $this->doctrine     = $doctrine;
-        $this->timeTracker  = $timeTracker;
-        $this->processes    = [];
+    public function __construct(
+        private Container $container, 
+        private EntityManagerInterface $doctrine, 
+        private TimeTracker $timeTracker)
+    {                
     }
 
     public function processRequest(Request $request, string $endPoint, int $id = null): object
@@ -88,6 +88,15 @@ class RestManager
         switch ($endPoint) {
             case 'wsUser':
                 $this->serviceClass = $this->container->get( 'app.userService' );
+            break;
+            case 'wsEvent':
+                $this->serviceClass = $this->container->get( 'app.eventService' );
+            break;
+            case 'wsLocation':
+                $this->serviceClass = $this->container->get( 'app.locationService' );
+            break;
+            case 'wsPlace':
+                $this->serviceClass = $this->container->get( 'app.placeService' );
             break;
         }
     }

@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\EventRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\SmallIntType;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,7 +23,8 @@ class Event
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
-    private $id;
+    private int $id;
+    //---------------------------------------------------------------------------
 
     #[Assert\NotBlank(message: 'Inserire il nome dell\'evento')]
     #[Assert\Type(
@@ -39,24 +39,43 @@ class Event
     )]
     #[ORM\Column(name:"name", length: 255)]
     private string $name;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire la città dell\'evento')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: 'Inserire almeno {{ limit }} caratteri',
+        maxMessage: 'Inserire massimo {{ limit }} caratteri',
+    )]
     #[ORM\Column(name:"city", length: 255)]
     private string $city;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire la data dell\'evento')]
     #[ORM\Column(name:"date_event", length: 255)]
     private DateTimeImmutable $date;
-
+    //---------------------------------------------------------------------------
+    
     #[OneToOne(targetEntity: Location::class, mappedBy: 'event')]
-    private $location;
+    private Location $location;
+    //---------------------------------------------------------------------------
 
     #[OneToMany(targetEntity: Sector::class, mappedBy: 'event')]
     private Collection $sectors;
+    //---------------------------------------------------------------------------
 
     #[OneToMany(targetEntity: Place::class, mappedBy: 'event')]
     private Collection $places;
+    //---------------------------------------------------------------------------
 
     #[OneToMany(targetEntity: Ticket::class, mappedBy: 'event')]
     private Collection $tickets;
+    //---------------------------------------------------------------------------
 
     public function __construct()
     {

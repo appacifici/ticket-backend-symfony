@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: "sectors")]
 #[ORM\UniqueConstraint(name: "unq_sector", columns: ["name","location_id","event_id"])]
@@ -29,30 +30,84 @@ class Sector
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
-    private $id;
+    private int $id;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire la fila del posto')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 2,
+        max: 150,
+        minMessage: 'Inserire almeno {{ limit }} caratteri',
+        maxMessage: 'Inserire massimo {{ limit }} caratteri',
+    )]
     #[ORM\Column(name:"name", length: 150)]
     private string $name;
+    //---------------------------------------------------------------------------
 
-    #[ORM\Column(name:"total", type:"smallint", length: 255)]
-    private $total;
+    #[Assert\NotBlank(message: 'Inserire il totale di posto')]
+    #[Assert\Type(
+        type: 'int',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 2,
+        max: 5,
+        minMessage: 'Inserire almeno {{ limit }} caratteri',
+        maxMessage: 'Inserire massimo {{ limit }} caratteri',
+    )]
+    #[ORM\Column(name:"total", type:"smallint", length: 5)]
+    private int $total;
+    //---------------------------------------------------------------------------
 
-    #[ORM\Column(name:"purchased", type:"smallint", length: 255)]
-    private $purchased;
+    #[Assert\NotBlank(message: 'Inserire il numero di posti prenotati')]
+    #[Assert\Type(
+        type: 'int',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 2,
+        max: 5,
+        minMessage: 'Inserire almeno {{ limit }} caratteri',
+        maxMessage: 'Inserire massimo {{ limit }} caratteri',
+    )]
+    #[ORM\Column(name:"purchased", type:"smallint", length: 5)]
+    private int $purchased;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire il numero il tipo di settore')]
+    #[Assert\Type(
+        type: 'int',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 1,
+        max: 1,
+        minMessage: 'Inserire almeno {{ limit }} caratteri',
+        maxMessage: 'Inserire massimo {{ limit }} caratteri',
+    )]
     #[ORM\Column(name:"place_type", type:"smallint", length: 1)]
-    private $placeType;
+    private int $placeType;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire il riferimento all\'evento')]
     #[ManyToOne(targetEntity: Event::class, inversedBy: 'sectors')]
     #[JoinColumn(name: 'event_id', referencedColumnName: 'id')]
-    private $event;
+    private Event $event;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire il riferimento alla location')]
     #[ManyToOne(targetEntity: Location::class, inversedBy: 'sectors')]
     #[JoinColumn(name: 'location_id', referencedColumnName: 'id')]
-    private $location;
+    private Location $location;
+    //---------------------------------------------------------------------------
 
     #[OneToMany(targetEntity: Place::class, mappedBy: 'sector')]
     private Collection $places;
+    //---------------------------------------------------------------------------
 
     public function __construct()
     {

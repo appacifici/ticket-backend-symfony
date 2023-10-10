@@ -19,7 +19,8 @@ class User
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
-    private $id;
+    private int $id;
+    //---------------------------------------------------------------------------
 
     #[Assert\NotBlank(message: 'Inserire il nome')]
     #[Assert\Type(
@@ -33,7 +34,8 @@ class User
         minMessage: 'Inserire almeno {{ limit }} caratteri',
         maxMessage: 'Inserire massimo {{ limit }} caratteri',
     )]
-    private $name;
+    private string $name;
+    //---------------------------------------------------------------------------
 
     #[Assert\NotBlank(message: 'Inserire il cognome')]
     #[Assert\Type(
@@ -47,14 +49,16 @@ class User
         maxMessage: 'Inserire massimo {{ limit }} caratteri',
     )]
     #[ORM\Column(name:"surname", type: "string", length: 255)]
-    private $surname;
+    private string $surname;
+    //---------------------------------------------------------------------------
 
     #[Assert\NotBlank(message: "Inserire l'email")]
     #[Assert\Email(
         message: 'Inserire un formato di email valido',
     )]
     #[ORM\Column(name:"email", type: "string", length: 255)]
-    private $email;
+    private string $email;
+    //---------------------------------------------------------------------------
 
     #[Assert\NotBlank(message: 'Inserire username')]
     #[Assert\Type(
@@ -68,7 +72,8 @@ class User
         maxMessage: 'Inserire massimo {{ limit }} caratteri',
     )]
     #[ORM\Column(name:"username", type: "string", length: 255)]
-    private $username;
+    private string $username;
+    //---------------------------------------------------------------------------
 
     #[Assert\NotBlank(message: 'Inserire la password')]
     #[Assert\Type(
@@ -82,7 +87,8 @@ class User
         maxMessage: 'Inserire massimo {{ limit }} caratteri',
     )]
     #[ORM\Column(name:"password", type: "string", length: 255)]
-    private $password;
+    private string $password;
+    //---------------------------------------------------------------------------
 
     public function getId(): ?int
     {

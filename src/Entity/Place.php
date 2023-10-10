@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PlaceRepository;
-use Doctrine\DBAL\Types\SmallIntType;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToOne;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: "places")]
 #[ORM\UniqueConstraint(name: "unq_place", columns: ["line","number","event_id","sector_id"])]
@@ -22,30 +21,72 @@ class Place
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
-    private $id;
+    private int $id;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire la fila del posto')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 1,
+        max: 3,
+        minMessage: 'Inserire almeno {{ limit }} caratteri',
+        maxMessage: 'Inserire massimo {{ limit }} caratteri',
+    )]
     #[ORM\Column(name:"line", length: 3)]
     private string $line;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire numero del posto')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[Assert\Length(
+        min: 1,
+        max: 3,
+        minMessage: 'Inserire almeno {{ limit }} caratteri',
+        maxMessage: 'Inserire massimo {{ limit }} caratteri',
+    )]
     #[ORM\Column(name:"number", length: 3)]
     private string $number;
+    //---------------------------------------------------------------------------
 
-    #[ORM\Column(name:"price", type:"smallint", length: 255)]
-    private $price;
+    #[Assert\NotBlank(message: 'Inserire il prezzo del posto')]
+    #[Assert\Type(
+        type: 'smallint',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
+    #[ORM\Column(name:"price", type:"smallint")]
+    private int $price;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire se il posto è libero')]
+    #[Assert\Type(
+        type: 'smallint',
+        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+    )]
     #[ORM\Column(name:"free", type:"smallint", length: 1, options: ["default" => 1])]
-    private $free;
+    private int $free;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire il riferimento all\'evento')]
     #[ManyToOne(targetEntity: Event::class, inversedBy: 'places')]
     #[JoinColumn(name: 'event_id', referencedColumnName: 'id')]
-    private $event;
+    private Event $event;
+    //---------------------------------------------------------------------------
 
+    #[Assert\NotBlank(message: 'Inserire il riferimento del settore')]
     #[ManyToOne(targetEntity: Sector::class, inversedBy: 'places')]
     #[JoinColumn(name: 'sector_id', referencedColumnName: 'id')]
-    private $sector;
+    private Sector $sector;
+    //---------------------------------------------------------------------------
 
     #[OneToOne(targetEntity: Ticket::class, mappedBy: 'place')]
-    private $ticket;
+    private Ticket $ticket;
+    //---------------------------------------------------------------------------
 
     public function getId(): ?int
     {

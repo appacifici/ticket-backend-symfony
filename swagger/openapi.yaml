@@ -1,0 +1,839 @@
+swagger: '2.0'
+info:  
+  version: 1.0.0
+  title: Swagger Ticket
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: it@ticket.io
+  license:
+    name: Apache-2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: petstore.swagger.io
+basePath: /v2
+
+schemes:
+  - http
+  - https
+paths:
+
+  /ticket/purchase:
+    post:
+      tags:
+        - Ticket
+      summary: Purchase Ticket For User
+      description: ''
+      operationId: addTicketPurchase
+      consumes:
+        - application/json
+      produces:
+        - application/json 
+      parameters:
+        - in: body
+          name: body
+          description: user object that needs to be added to the store
+          required: true
+          schema:
+            type: object
+            properties:
+              userId:
+                type: integer        
+                required: true
+                example: 1
+              puschase:
+                type: object
+                properties:
+                  eventId:
+                    type: integer        
+                    required: true
+                    example: 1
+                  sectorId:
+                    type: integer        
+                    required: true
+                    example: 1
+                  placeId:
+                    type: integer        
+                    required: true
+                    example: 1
+                  placeType:
+                    type: integer        
+                    required: true
+                    example: 1
+      responses:
+        '405':
+          description: Invalid input 
+
+  #---------------------------------------------------------------
+  #----------------------------- USER ---------------------------
+  #---------------------------------------------------------------
+
+  /ws/user:
+    post:
+      tags:
+        - User
+      summary: Add a new user
+      description: ''
+      operationId: addUser
+      consumes:
+        - application/json
+      produces:
+        - application/json 
+      parameters:
+        - in: body
+          name: body
+          description: user object that needs to be added to the store
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '405':
+          description: Invalid input  
+  
+    get:
+      tags:
+        - User
+      summary: Finds All User             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '400':
+          description: Invalid status value        
+
+  /ws/user/{id}:
+    put:
+      tags:
+        - User
+      summary: Update an existing User
+      description: ''
+      operationId: updatePet
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Pet object that needs to be added to the store
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+        '405':
+          description: Validation exception
+    
+    get:
+      tags:
+        - User
+      summary: Find One User             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '400':
+          description: Invalid status value
+
+    delete:
+      tags:
+        - User
+      summary: Delete One User             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation          
+        '400':
+          description: Invalid status value
+  
+  #---------------------------------------------------------------
+  #----------------------------- EVENT ---------------------------
+  #---------------------------------------------------------------
+
+  /ws/event:
+    post:
+      tags:
+        - Event
+      summary: Add a new Event
+      description: ''
+      operationId: addEvent
+      consumes:
+        - application/json
+      produces:
+        - application/json 
+      parameters:
+        - in: body
+          name: body
+          description: user object that needs to be added to the store
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string        
+                required: true
+                example: Cold Play
+              city:
+                type: string
+                example: Roma
+                required: true
+              date:
+                type: string
+                example: 2022-07-12 21:00:00
+                required: true
+      responses:
+        '405':
+          description: Invalid input  
+  
+    get:
+      tags:
+        - Event
+      summary: Finds All Event             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        '400':
+          description: Invalid status value      
+
+  /ws/event/{id}:
+    put:
+      tags:
+        - Event
+      summary: Update an existing Event
+      description: ''
+      operationId: updateEvent
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body          
+          required: true
+          schema:
+            $ref: '#/definitions/Event' 
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+        '405':
+          description: Validation exception
+    
+    get:
+      tags:
+        - Event
+      summary: Find One Event             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        '400':
+          description: Invalid status value
+    
+    delete:
+      tags:
+        - Event
+      summary: Delete One Event             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation          
+        '400':
+          description: Invalid status value
+  
+  #---------------------------------------------------------------
+  #----------------------------- PLACE ---------------------------
+  #---------------------------------------------------------------
+
+  /ws/place:
+    post:
+      tags:
+        - Place
+      summary: Add a new Place
+      description: ''
+      operationId: addPlace
+      consumes:
+        - application/json
+      produces:
+        - application/json 
+      parameters:
+        - in: body
+          name: body
+          description: place
+          required: true
+          schema:
+            type: object
+            properties:              
+              line:
+                type: string        
+                required: true
+                example: 7A
+              number:
+                type: string
+                example: 15
+                required: true
+              price:
+                type: number
+                example: 50
+                required: true
+              eventId:
+                type: integer
+                example: 1
+                required: true
+              sectorId:
+                type: integer
+                example: 1
+                required: true
+      responses:
+        '405':
+          description: Invalid input  
+  
+    get:
+      tags:
+        - Place
+      summary: Finds All Place             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Place'
+        '400':
+          description: Invalid status value          
+
+  /ws/place/{id}:
+    put:
+      tags:
+        - Place
+      summary: Update an existing Place
+      description: ''
+      operationId: updatePlace
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body          
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TicketPushcaseItem'
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+        '405':
+          description: Validation exception
+    
+    get:
+      tags:
+        - Place
+      summary: Find One Place             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Place'
+        '400':
+          description: Invalid status value
+    delete:
+      tags:
+        - Place
+      summary: Delete One Place             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation          
+        '400':
+          description: Invalid status value
+
+  #---------------------------------------------------------------
+  #----------------------------- SECTOR --------------------------
+  #---------------------------------------------------------------
+
+  /ws/sector:
+    post:
+      tags:
+        - Sector
+      summary: Add a new Sector
+      description: ''
+      operationId: addSector
+      consumes:
+        - application/json
+      produces:
+        - application/json 
+      parameters:
+        - in: body
+          name: body
+          description: Sector
+          required: true
+          schema:
+            type: object
+            properties:              
+              name:
+                type: string        
+                required: true
+                example: 7A
+              total:
+                type: integer
+                example: 5000
+                required: true
+              purchased:
+                type: integer
+                example: 0
+                required: true
+              placeType:
+                type: integer
+                example: 1 o 2
+                required: true
+              eventId:
+                type: integer
+                example: 2
+                required: true
+              locationId:
+                type: integer
+                example: 3
+                required: true
+      responses:
+        '405':
+          description: Invalid input  
+  
+    get:
+      tags:
+        - Sector
+      summary: Finds All Sector             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Sector'
+        '400':
+          description: Invalid status value          
+
+  /ws/sector/{id}:
+    put:
+      tags:
+        - Sector
+      summary: Update an existing Sector
+      description: ''
+      operationId: updateSector
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Sector
+          required: true
+          schema:
+            type: object
+            properties:              
+              name:
+                type: string        
+                required: true
+                example: 7A
+              total:
+                type: integer
+                example: 5000
+                required: true
+              purchased:
+                type: integer
+                example: 0
+                required: true
+              placeType:
+                type: integer
+                example: 1 o 2
+                required: true
+              eventId:
+                type: integer
+                example: 2
+                required: true
+              locationId:
+                type: integer
+                example: 3
+                required: true 
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+        '405':
+          description: Validation exception
+    
+    get:
+      tags:
+        - Sector
+      summary: Find One Sector             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Sector'
+        '400':
+          description: Invalid status value 
+                   
+    delete:
+      tags:
+        - Sector
+      summary: Delete One Sector             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation          
+        '400':
+          description: Invalid status value  
+
+  #---------------------------------------------------------------
+  #----------------------------- Location --------------------------
+  #---------------------------------------------------------------
+
+  /ws/location:
+    post:
+      tags:
+        - Location
+      summary: Add a new Location
+      description: ''
+      operationId: addLocation
+      consumes:
+        - application/json
+      produces:
+        - application/json 
+      parameters:
+        - in: body
+          name: body
+          description: Location
+          required: true
+          schema:
+            type: object
+            properties:              
+              name:
+                type: string        
+                required: true
+                example: Stadio San Siro
+              address:
+                type: string
+                example: Via Milano 55
+                required: true              
+              eventId:
+                type: integer
+                example: 2
+                required: true              
+      responses:
+        '405':
+          description: Invalid input  
+  
+    get:
+      tags:
+        - Location
+      summary: Finds All Location             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Location'
+        '400':
+          description: Invalid status value          
+
+  /ws/location/{id}:
+    put:
+      tags:
+        - Location
+      summary: Update an existing Location
+      description: ''
+      operationId: updateLocation
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Location
+          required: true
+          schema:
+            type: object
+            properties:              
+              name:
+                type: string        
+                required: true
+                example: Stadio San Siro
+              address:
+                type: string
+                example: Via Milano 55
+                required: true              
+              eventId:
+                type: integer
+                example: 2
+                required: true  
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+        '405':
+          description: Validation exception
+    
+    get:
+      tags:
+        - Location
+      summary: Delete One Location             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Location'
+        '400':
+          description: Invalid status value 
+                   
+    delete:
+      tags:
+        - Location
+      summary: Find One Location             
+      produces:
+        - application/json   
+      responses:
+        '200':
+          description: successful operation          
+        '400':
+          description: Invalid status value  
+  
+  #---------------------------------------------------------------
+  #------------------------- DEFINITIONS -------------------------
+  #---------------------------------------------------------------
+
+definitions:  
+  TicketPushcaseItem:
+    title: TicketPushcaseItem
+    description: TicketPushcaseItem
+    type: object
+    minItems: 1
+    properties:    
+      eventId:
+        type: integer        
+        required: true
+        example: 1
+      sectorId:
+        type: integer        
+        required: true
+        example: 1
+      placeId:
+        type: integer        
+        required: true
+        example: 1
+      placeType:
+        type: integer        
+        required: true
+        example: 1
+  User:
+    title: User
+    description: User
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      username:
+        type: string
+        example: marietto
+      firstName:
+        type: string
+        example: Mario
+      lastName:
+        type: string
+        example: Rossi
+      email:
+        type: string
+        example: mario@rossi.it
+      password:
+        type: string          
+        example: 23r8few029r
+  Event:
+    title: Event
+    description: Event
+    type: object
+    properties:
+      id: 
+        type: integer
+        example: 1
+      name:
+        type: string        
+      city:
+        type: string
+      date:
+        type: string
+  Place:
+    title: Place
+    description: Place
+    type: object
+    properties:
+      result:
+        type: boolean
+      data:
+        type: object
+        properties:
+          id:
+            type: integer        
+            required: true
+            example: 1
+          line:
+            type: string        
+            required: true
+            example: 7A
+          number:
+            type: string
+            example: 15
+            required: true
+          price:
+            type: number
+            example: 50
+          free:
+            type: integer
+            example: 1
+          eventId:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: Cold Play
+          sectorId:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 2
+              name:
+                type: string
+                example: Prato
+  Sector:
+    title: Sector
+    description: Sector
+    type: object
+    properties:
+      result:
+        type: boolean
+      data:
+        type: object
+        properties:
+          id:
+            type: integer        
+            required: true
+            example: 1
+          name:
+            type: string        
+            required: true
+            example: Tribuna d'onore
+          total:
+            type: integer
+            example: 1500
+            required: true
+          purchased:
+            type: number
+            example: 50
+          placeType:
+            type: integer
+            example: 2
+          event:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: Cold Play
+          location:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 2
+              name:
+                type: string
+                example: Prato
+  Location:
+    title: Location
+    description: Location
+    type: object
+    properties:
+      result:
+        type: boolean
+      data:
+        type: object
+        properties:
+          id:
+            type: integer        
+            required: true
+            example: 1
+          name:
+            type: string        
+            required: true
+            example: Tribuna d'onore          
+          address:
+            type: string        
+            required: true
+            example: Viale dei Gladiatori, 00135 Roma RM          
+          event:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1          
+              name:
+                type: integer
+                example: Cold Play          
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'

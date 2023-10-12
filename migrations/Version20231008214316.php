@@ -36,7 +36,7 @@ final class Version20231008214316 extends AbstractMigration
         //Settore Prato ID 2 - Posti totali 100
         $this->addSql("INSERT INTO sectors (name,total,purchased,place_type,event_id,location_id) VALUE (
             'Prato', 
-            '100', 
+            '5', 
             0,
             1,
             1,
@@ -120,8 +120,8 @@ final class Version20231008214316 extends AbstractMigration
                 '20000', 
                 0,
                 1,
-                1,
-                1
+                2,
+                2
             )
         ");
     }

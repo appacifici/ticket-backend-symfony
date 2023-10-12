@@ -20,17 +20,17 @@ class RestManager
         'float'             => 'double',
         'datetime'          => 'string',
         'string'            => 'string',
-        'datetime_immutable'=> 'string'
+        'datetime_immutable' => 'string'
     ];
- 
+
     private $serviceClass   = null;
     private $processes      = [];
 
     public function __construct(
-        private Container $container, 
-        private EntityManagerInterface $doctrine, 
-        private TimeTracker $timeTracker)
-    {                
+        private Container $container,
+        private EntityManagerInterface $doctrine,
+        private TimeTracker $timeTracker
+    ) {
     }
 
     public function processRequest(Request $request, string $endPoint, int $id = null): object
@@ -87,27 +87,27 @@ class RestManager
     {
         switch ($endPoint) {
             case 'wsUser':
-                $this->serviceClass = $this->container->get( 'app.userService' );
-            break;
+                $this->serviceClass = $this->container->get('app.userService');
+                break;
             case 'wsEvent':
-                $this->serviceClass = $this->container->get( 'app.eventService' );
-            break;
+                $this->serviceClass = $this->container->get('app.eventService');
+                break;
             case 'wsLocation':
-                $this->serviceClass = $this->container->get( 'app.locationService' );
-            break;
+                $this->serviceClass = $this->container->get('app.locationService');
+                break;
             case 'wsPlace':
-                $this->serviceClass = $this->container->get( 'app.placeService' );
-            break;
+                $this->serviceClass = $this->container->get('app.placeService');
+                break;
             case 'wsSector':
-                $this->serviceClass = $this->container->get( 'app.sectorService' );
-            break;
+                $this->serviceClass = $this->container->get('app.sectorService');
+                break;
         }
     }
 
      /**
      * Metodo che effettua la mappatura tra i tipi di symfony entity e quelli ricevuti dalla chiamata REST
      */
-    static function checkTypeInfoFieldEntity(EntityManagerInterface $doctrine, $entity, object $inputs): array
+    public static function checkTypeInfoFieldEntity(EntityManagerInterface $doctrine, $entity, object $inputs): array
     {
 
         //Recupera la class name dell'entita

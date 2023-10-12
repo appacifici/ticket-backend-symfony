@@ -349,7 +349,7 @@ class TemplateController extends AbstractController
      * Metodo che cicla l'xml e fa il fetch dei figli unici e gli altri li mette in un array
      * @param obj $xml
      */
-    function createTemplate($xml)
+    public function createTemplate($xml)
     {
         $this->container->get('twig')->addGlobal('dependenciesCSSHead', '');
         $this->container->get('twig')->addGlobal('dependenciesCSSBody', '');
@@ -449,7 +449,7 @@ class TemplateController extends AbstractController
      * @param string $fetchVar
      * @return boolean
      */
-    function controls($xml, $tpl, $fetchVar)
+    private function controls($xml, $tpl, $fetchVar)
     {
         $count = 0;
         foreach ($xml->tpl as $node) {
@@ -470,7 +470,7 @@ class TemplateController extends AbstractController
      * @param array $arr
      * @param string $fetchVar
      */
-    function concatenate($arr, $fetchVar)
+    private function concatenate($arr, $fetchVar)
     {
         $value = '';
         foreach ($arr[$fetchVar] as $myBox) {
@@ -563,9 +563,9 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * Metodo che effettua il rende di tutte le pagine se sta in cache la oagibna la prende da li 
+     * Metodo che effettua il rende di tutte le pagine se sta in cache la oagibna la prende da li
      */
-    public function getPageFromHttpCache( Request $request, string $section = 'homepage.xml', bool $enabledCache = true, $params = null) : Response
+    public function getPageFromHttpCache(Request $request, string $section = 'homepage.xml', bool $enabledCache = true, $params = null): Response
     {
         $this->setParameters();
         $eTag = md5($request->server->get('REQUEST_URI')  . '?&mobile=' . $this->globalConfigManager->isMobile() . '&isamp=' . $this->globalConfigManager->getAmpActive() . '&v=1 ');
@@ -707,8 +707,7 @@ class TemplateController extends AbstractController
         //oppure se lo stato del match è end
         //oppure se è uno dei widget da temporizzare a tempo
         //oppure se la rotta aperta è una di quella consentite per essere messa in cache
-        if (
-            !empty($request->query->get('date')) && ( date_format(date_create($request->query->get('date')), 'Y-m-d') < date('Y-m-d') )
+        if (!empty($request->query->get('date')) && ( date_format(date_create($request->query->get('date')), 'Y-m-d') < date('Y-m-d') )
             || (!empty($request->query->get('status')) && $request->query->get('status') == 'end' )
             || $this->container->getEnabledWidgetCached($request->query->get('widget'))
             || $this->container->getEnabledRouteCached($request)

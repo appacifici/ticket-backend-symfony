@@ -49,7 +49,7 @@ class TicketPurchaseDTOException extends Exception
         return $this->hasException;
     }
 
-    public function errorMessage():string
+    public function errorMessage(): string
     {
         $errorMsg = 'Error on line ' . $this->getLine() . ' in ' . $this->getFile()
         . ': <b>' . $this->getMessage() . '</b>';

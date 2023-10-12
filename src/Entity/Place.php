@@ -169,7 +169,6 @@ class Place
     {
         return $this->ticket;
     }
-    
 }
 
 //ES: Fila 1 - Posto 5 - 50 - 1 ( colplay ) - 1 ( Tibuna D'onore )

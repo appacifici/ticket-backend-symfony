@@ -14,7 +14,7 @@ class TicketPurchaseResponse
     {
         $self                                                = new self();
         $self->response['success']                           = true;
-        foreach( $ticketPurchaseSuccess->getTickets() AS $ticket ) {
+        foreach ($ticketPurchaseSuccess->getTickets() as $ticket) {
             $self->response['tickets'][]  = $ticket->getCode();
         }
         return $self;

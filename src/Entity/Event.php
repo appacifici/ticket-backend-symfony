@@ -60,7 +60,7 @@ class Event
     #[ORM\Column(name:"date_event", length: 255)]
     private DateTimeImmutable $date;
     //---------------------------------------------------------------------------
-    
+
     #[OneToOne(targetEntity: Location::class, mappedBy: 'event')]
     private Location $location;
     //---------------------------------------------------------------------------
@@ -176,10 +176,10 @@ class Event
 
         return $this;
     }
-    
+
     public function getPlaces(): Collection
     {
-        return $this->places; 
+        return $this->places;
     }
 
     public function addPlace(Place $place): self
@@ -203,7 +203,7 @@ class Event
 
         return $this;
     }
-    
+
     public function getTickets(): Collection
     {
         return $this->tickets;
@@ -230,6 +230,4 @@ class Event
 
         return $this;
     }
-
-    
 }

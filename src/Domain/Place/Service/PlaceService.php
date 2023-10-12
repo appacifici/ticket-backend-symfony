@@ -26,8 +26,8 @@ class PlaceService implements PlaceServiceInterface
     public function getIsFree(int $placeId): bool
     {
         $place = $this->doctrine->getRepository(Place::class)->findOneBy(['id' => $placeId]);
-        if( empty( $place ) ) {
-            throw new Exception('Record entity Place ('.$placeId.') not found');
+        if (empty($place)) {
+            throw new Exception('Record entity Place (' . $placeId . ') not found');
         }
         return $place->getFree() == 1 ? true : false;
     }

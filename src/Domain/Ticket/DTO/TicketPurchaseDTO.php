@@ -65,7 +65,7 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
             $this->purchaseInterfaces[]   = $purchaseDTO->create($purchaseData, $index);
         }
 
-        
+
         $this->finalPurchaseInterfaces = $this->purchaseInterfaces;
 
         return $this;

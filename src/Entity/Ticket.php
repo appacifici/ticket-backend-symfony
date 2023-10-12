@@ -62,7 +62,7 @@ class Ticket
     #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private User $user;
     //---------------------------------------------------------------------------
-    
+
     public function getId(): ?int
     {
         return $this->id;

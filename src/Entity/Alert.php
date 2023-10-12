@@ -15,10 +15,10 @@ use App\Repository\AlertRepository;
 #[ORM\Entity(repositoryClass: AlertRepository::class)]
 class Alert
 {
+    use GlobalTrait;
+
     const COUNT_QUERY  = 1;
     const RESULT_QUERY = 2;
-
-    use GlobalTrait;
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]

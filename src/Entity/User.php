@@ -91,7 +91,7 @@ class User
     //---------------------------------------------------------------------------
 
     public function __construct()
-    {        
+    {
     }
 
     public function getId(): ?int
@@ -158,6 +158,4 @@ class User
 
         return $this;
     }
-
-    
 }

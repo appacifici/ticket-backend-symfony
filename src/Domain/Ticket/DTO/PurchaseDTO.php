@@ -13,14 +13,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 
 class PurchaseDTO implements PurchaseInterface
-{    
+{
     protected readonly Event    $event; /** @phpstan-ignore-line */
     protected readonly Sector   $sector; /** @phpstan-ignore-line */
     protected readonly ?Place   $place; /** @phpstan-ignore-line */
     protected readonly User     $user; /** @phpstan-ignore-line */
     protected readonly int      $placeType; /** @phpstan-ignore-line */
     /** @phpstan-ignore-end */
-
 
     public function __construct(
         private EntityManagerInterface $doctrine
@@ -54,35 +53,34 @@ class PurchaseDTO implements PurchaseInterface
             }
         }
 
-        if (
-            $ticketSeviceException->getNotFoundEntityUser() !== 0 ||
+        if ($ticketSeviceException->getNotFoundEntityUser() !== 0 ||
             $ticketSeviceException->getNotFoundEntityEvent() !== 0 ||
-            $ticketSeviceException->getNotFoundEntitySector() !== 0||
-            $ticketSeviceException->getNotFoundEntityPlace() !== 0 
+            $ticketSeviceException->getNotFoundEntitySector() !== 0 ||
+            $ticketSeviceException->getNotFoundEntityPlace() !== 0
         ) {
-            throw $ticketSeviceException;            
+            throw $ticketSeviceException;
         }
 
 
-        /** 
+        /**
         * @psalm-suppress PossiblyNullPropertyAssignmentValue
         * Soppresso questo errore in quanto psalm non riesce a capire che non è possibile arrivare a queste assegnazioni se le variabili sono null
-        * perche uscirebbe prima lanciando l'eccezione 
+        * perche uscirebbe prima lanciando l'eccezione
         */
         $this->event        = $event;
-        /** 
+        /**
         * @psalm-suppress PossiblyNullPropertyAssignmentValue
         */
         $this->sector       = $sector;
-        /** 
+        /**
         * @psalm-suppress PossiblyNullPropertyAssignmentValue
         */
         $this->place        = $place;
-        /** 
+        /**
         * @psalm-suppress PossiblyNullPropertyAssignmentValue
         */
         $this->user         = $user;
-        /** 
+        /**
         * @psalm-suppress PossiblyNullPropertyAssignmentValue
         */
         $this->placeType    = $data['placeType'];

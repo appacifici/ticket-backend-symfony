@@ -18,14 +18,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: SectorRepository::class)]
 class Sector
 {
+    use GlobalTrait;
+
     const FREE_PLACE        = 1;
     const ASSIGNED_PLACE    = 2;
     const PLACE = [
         'Libero'    => self::FREE_PLACE,
         'Assegnato' => self::ASSIGNED_PLACE,
     ];
-
-    use GlobalTrait;
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]

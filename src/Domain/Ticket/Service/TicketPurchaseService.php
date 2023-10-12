@@ -37,11 +37,11 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
     private array $ticketForSectorEvent = [];
 
     public function __construct(
-        private EntityManagerInterface  $doctrine,
-        private SectorService           $sectorService,
-        private PlaceService            $placeService,
-        private TicketService          $ticketService,
-        private EmailService            $emailService,
+        private EntityManagerInterface $doctrine,
+        private SectorService $sectorService,
+        private PlaceService $placeService,
+        private TicketService $ticketService,
+        private EmailService $emailService,
     ) {
     }
 
@@ -109,7 +109,6 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
 
             $this->emailService->sendTicketPusrchaseEmail($ticketPurchases, $ticketPurchaseSuccess);
             $this->doctrine->getConnection()->commit();
-
         } catch (Exception $e) {
             $this->doctrine->getConnection()->rollBack();
             throw new Exception('Internal query error' . $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
@@ -124,7 +123,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */
-    private function checkLimitPurchase():  TicketPurchaseLimitException|bool
+    private function checkLimitPurchase(): TicketPurchaseLimitException|bool
     {
         if (self::MAX_EVENT_TRANSACTION != -1 && count($this->ticketForEvent) > self::MAX_EVENT_TRANSACTION) {
             $ticketPurchaseLimitException =  new TicketPurchaseLimitException('Ticket for event Limit Exceeded');
@@ -172,7 +171,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
     }
 
     private function ticketPlaceFree(array $purchases): bool|TicketPurchasePlaceException
-    {        
+    {
         $ticketPurchasePlaceException = new TicketPurchasePlaceException();
         foreach ($purchases as $purchase) {
             if (!is_null($purchase->getPlace())) {

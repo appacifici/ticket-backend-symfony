@@ -21,11 +21,11 @@ class LocationService extends ControlService
     public $checkFields = [ "name", "address", "eventId" ];
 
     public function __construct(
-        private Container $container,
-        private EntityManagerInterface $doctrine,
-        private TimeTracker $timeTracker,
-        private Validator $validator,
-        private AlertUtility $alertUtility
+        private Container               $container,
+        private EntityManagerInterface  $doctrine,
+        private TimeTracker             $timeTracker,
+        private Validator               $validator,
+        private AlertUtility            $alertUtility
     ) {
         parent::__construct($container, $doctrine, $timeTracker, $validator, $alertUtility);
         $this->response = new stdClass();

@@ -43,8 +43,8 @@ class ExceptionTicketResponse
             foreach ($e->getPuschases() as $key => $puschases) {
                 $x = 0;
                 foreach ($puschases as $puschase) {
-                    $self->response['errors'][0]['message']                              = TicketPurchaseDTOException::ERROR_PURCHASE;
-                    $self->response['errors'][0]['code']                                 = TicketPurchaseDTOException::PURCHASE_ERROR_MESSAGE[TicketPurchaseDTOException::ERROR_PURCHASE];
+                    $self->response['errors'][0]['message']                              = TicketPurchaseDTOException::PURCHASE_ERROR_MESSAGE[TicketPurchaseDTOException::ERROR_PURCHASE];
+                    $self->response['errors'][0]['code']                                 = TicketPurchaseDTOException::ERROR_PURCHASE;
                     $self->response['errors'][0]['pushcases'][$key][$x]['code']          = $puschase;
                     $self->response['errors'][0]['pushcases'][$key][$x]['message']       = TicketPurchaseDTOException::PURCHASE_ERROR_MESSAGE[$puschase];
                     $x++;

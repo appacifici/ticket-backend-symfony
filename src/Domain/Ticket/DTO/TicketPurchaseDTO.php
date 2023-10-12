@@ -23,7 +23,6 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
 
     public function create(array $data): self
     {
-
         $ticketSeviceException =  new TicketPurchaseDTOException('Invalid format request ticket');
 
         if (empty($data['userId']) || !is_int($data['userId'])) {

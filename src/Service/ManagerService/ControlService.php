@@ -26,20 +26,20 @@ class ControlService
     //Almeno un campo richiesto
     const MIN_ONE_REQUIRED  = 2;
 
-    private array $processes;
-    public object $response;
-    private string $processName;
-    private string $process;
-    public string $responseMessage;
-    public ?object $input;
+    private array   $processes;
+    public object   $response;
+    private string  $processName;
+    private string  $process;
+    public string   $responseMessage;
+    public ?object  $input;
     public $checkFields;
 
     public function __construct(
-        private Container $container,
-        private EntityManagerInterface $doctrine,
-        private TimeTracker $timeTracker,
-        private Validator $validator,
-        private AlertUtility $alertUtility
+        private Container               $container,
+        private EntityManagerInterface  $doctrine,
+        private TimeTracker             $timeTracker,
+        private Validator               $validator,
+        private AlertUtility            $alertUtility
     ) {
         $this->container        = $container;
         $this->doctrine         = $doctrine;

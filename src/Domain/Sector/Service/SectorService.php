@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Sector\Service;
 
+use App\Domain\ErrorCodes;
 use App\Entity\Sector;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Domain\Sector\Interface\SectorServiceInterface;
@@ -14,9 +15,9 @@ use App\Domain\Sector\Interface\SectorServiceInterface;
  */
 class SectorService implements SectorServiceInterface
 {
-    const TICKET_SOLD_OUT                   = 1;
-    const TICKET_SECTOR_SOLD_OUT            = 2;
-    const TICKET_SECTOR_AVAILABLE           = 3;
+    const TICKET_SOLD_OUT                   = ErrorCodes::TICKET_SOLD_OUT;
+    const TICKET_SECTOR_SOLD_OUT            = ErrorCodes::TICKET_SECTOR_SOLD_OUT;
+    const TICKET_SECTOR_AVAILABLE           = ErrorCodes::TICKET_SECTOR_AVAILABLE;
 
     public function __construct(
         private EntityManagerInterface $doctrine

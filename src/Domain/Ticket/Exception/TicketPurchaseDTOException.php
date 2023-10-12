@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace App\Domain\Ticket\Exception;
 
+use App\Domain\ErrorCodes;
 use Exception;
 
 class TicketPurchaseDTOException extends Exception
 {
-    const EMPTY_USER_ID                 = 1;
-    const EMPTY_PURCHASE                = 2;
-    const ERROR_PURCHASE                = 3;
-    const PURCHASE_MISSING_EVENT_ID     = 4;
-    const PURCHASE_MISSING_PLACE_TYPE   = 5;
-    const PURCHASE_MISSING_PLACE_ID     = 6;
-    const PURCHASE_MISSING_SECTOR_ID    = 7;
-    const NOT_FOUND_ENTITY_USER         = 8;
-    const NOT_FOUND_ENTITY_EVENT        = 9;
-    const NOT_FOUND_ENTITY_SECTOR       = 10;
-    const NOT_FOUND_ENTITY_PLACE        = 11;
+    const EMPTY_USER_ID                 = ErrorCodes::EMPTY_USER_ID;
+    const EMPTY_PURCHASE                = ErrorCodes::EMPTY_PURCHASE;
+    const ERROR_PURCHASE                = ErrorCodes::ERROR_PURCHASE;
+    const PURCHASE_MISSING_EVENT_ID     = ErrorCodes::PURCHASE_MISSING_EVENT_ID;
+    const PURCHASE_MISSING_PLACE_TYPE   = ErrorCodes::PURCHASE_MISSING_PLACE_TYPE;
+    const PURCHASE_MISSING_PLACE_ID     = ErrorCodes::PURCHASE_MISSING_PLACE_ID;
+    const PURCHASE_MISSING_SECTOR_ID    = ErrorCodes::PURCHASE_MISSING_SECTOR_ID;
+    const NOT_FOUND_ENTITY_USER         = ErrorCodes::NOT_FOUND_ENTITY_USER;
+    const NOT_FOUND_ENTITY_EVENT        = ErrorCodes::NOT_FOUND_ENTITY_EVENT;
+    const NOT_FOUND_ENTITY_SECTOR       = ErrorCodes::NOT_FOUND_ENTITY_SECTOR;
+    const NOT_FOUND_ENTITY_PLACE        = ErrorCodes::NOT_FOUND_ENTITY_PLACE;
 
     const PURCHASE_ERROR_MESSAGE        = [
         self::EMPTY_USER_ID                 => 'Missin userId element',

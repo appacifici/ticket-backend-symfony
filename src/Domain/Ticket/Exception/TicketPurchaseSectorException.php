@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Domain\Ticket\Exception;
 
+use App\Domain\ErrorCodes;
 use App\Entity\Sector;
 use Exception;
 
 class TicketPurchaseSectorException extends Exception
 {
-    const TICKET_SOLD_OUT                   = 1;
-    const TICKET_SECTOR_SOLD_OUT            = 2;
+    const TICKET_SOLD_OUT                   = ErrorCodes::TICKET_SOLD_OUT;
+    const TICKET_SECTOR_SOLD_OUT            = ErrorCodes::TICKET_SECTOR_SOLD_OUT;
 
-    const SECTOR_ERROR_MESSAGE      = [
+    const SECTOR_ERROR_MESSAGE = [
         self::TICKET_SOLD_OUT               => 'Ticket sold out',
         self::TICKET_SECTOR_SOLD_OUT        => 'Ticket sector sold out'
     ];
 
-    private bool $hasException           = false;
-    private array $listExceptions         = [];
-    private int $index                  = 0;
-    private Sector $sector;
+    private bool    $hasException             = false;
+    private array   $listExceptions           = [];
+    private int     $index                    = 0;
 
     public function hasException(): bool
     {

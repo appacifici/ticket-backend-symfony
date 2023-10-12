@@ -2,6 +2,7 @@
 
 namespace App\Service\ManagerService;
 
+use App\Domain\ErrorCodes;
 use App\Entity\Event;
 use App\Entity\Location;
 use App\Entity\Sector;
@@ -12,7 +13,9 @@ use App\Service\UtilityService\TimeTracker;
 use App\Service\RestService\RestManager;
 use App\Service\UtilityService\AlertUtility;
 use App\Entity\User;
+use Exception;
 use stdClass;
+use Throwable;
 
 /**
  * Classe che gestisce centralizzando i vari controlli necessari ai servizi e ne traccia tempistiche e debug alert
@@ -306,16 +309,13 @@ class ControlService
     }
 
     /**
-     * Inserisce nel debug i dati dell'eccezione
-     * @param Exception|Throwable $e
-     * @param string $section
-     * @return void
+     * Inserisce nel debug i dati dell'eccezione     
      */
-    protected function setDebugException($e, string $section): void
+    protected function setDebugException(Exception|Throwable $e, string $section): void
     {
 
         $this->response->result     = false;
-        $this->response->errorCode  = $this->container->getParameter('ws.code.respInternalError');
+        $this->response->code       = ErrorCodes::INTERNAL_SERVER_ERROR;
         $this->response->data       = $e->getMessage();
 
         $this->alertUtility->setError($this->process, print_r($this->response, true), 'Resp');
@@ -332,7 +332,7 @@ class ControlService
     {
         if (empty($entity)) {
             $this->response->result      = false;
-            $this->response->errorCode   = $this->container->getParameter('ws.code.notResultQuery');
+            $this->response->code        = ErrorCodes::NO_QUERY_RESULT;
             $this->response->data        = "Not result query: $section";
 
             $this->alertUtility->setCallResponse($this->process, print_r($this->response, true), 'Resp');

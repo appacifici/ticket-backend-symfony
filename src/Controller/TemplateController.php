@@ -12,14 +12,35 @@ use Symfony\Component\Finder\Finder;
 class TemplateController extends AbstractController
 {
     private $onCallPhp              = false;
-    public $versionSite            = null;
+    public  $versionSite            = null;
     private $folderTemplate         = null;
     private $callJsLoadPage         = array();
-    public $memcached              = null;
-    public $isMobile               = null;
-    public $globalConfigManager    = null;
-    public $respondeCode           = 202;
+    public  $memcached              = null;
+    public  $isMobile               = null;
+    public  $globalConfigManager    = null;
+    public  $respondeCode           = 202;
     private $finder                 = null;
+    private $forceRouteCss          = null;
+    public  $cacheUtility           = null;
+    public  $controlSession         = null;
+    public  $sessionActive          = null;
+    public  $userIsActive           = null;
+    public  $isIeVersion            = null;
+    public  $dependencyManager      = null;
+    public  $folderCss              = null;
+    public  $folderJs               = null;
+    public  $folderJsMin            = null;
+    public  $compactSite            = null;
+    public  $extension              = null;
+    public  $fileStructure          = null;
+    public  $responsePage           = null;
+    public  $xml                    = null;
+    public  $tplToSessionActive     = null;
+    public  $controlUserIsActive    = null;
+    public  $tplViewTplSessionActive= null;
+    public  $arrayFetch             = null;
+    public  $tplToUserIsActive      = null;
+    public  $route                  = null;
 
     /**
      * Metodo statico che fa la sottoscrizione run time dei servizi per la retrocompatibilita con le versioni precedenti si symfony
@@ -66,7 +87,7 @@ class TemplateController extends AbstractController
         //Avvio il servizio che gestisce il recupero delle dipendenze javascript
         $this->globalConfigManager = $this->container->get('app.globalConfigManager');
 
-        $this->forceRouteCss = !empty($this->forceRouteCss) ?  $this->forceRouteCss : false;
+        $this->forceRouteCss        = !empty($this->forceRouteCss) ?  $this->forceRouteCss : false;
         $this->globalConfigManager->getAboveTheFoldCss($this->forceRouteCss);
 
         $this->cacheUtility         = $this->globalConfigManager->cacheUtility;
@@ -140,7 +161,6 @@ class TemplateController extends AbstractController
 
     /**
      * Inizializza tutto il motore
-     * @param type $fileStructure
      */
     public function init(string $fileStructure, Request $request, object $extraParams = null)
     {
@@ -265,7 +285,6 @@ class TemplateController extends AbstractController
 
     /**
      * Metodo che setta il nome del xml da leggere
-     * @param string $xml
      */
     public function setXml($config, $xml)
     {
@@ -281,7 +300,6 @@ class TemplateController extends AbstractController
 
     /**
      * Metodo che cicla il file xml delle chiamare php e le esegue
-     * @param type $xml
      */
     private function loadCallPhp($xml)
     {
@@ -679,7 +697,7 @@ class TemplateController extends AbstractController
      */
     public function getDataCoreWidget(Request $request)
     {
-        $this->setPatameters();
+        $this->setParameters();
         $cores = explode(' ', $request->query->get('cores'));
 
         $data = array();
@@ -821,9 +839,7 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * Metodo che comprime l'html
-     * @param type $html
-     * @return type
+     * Metodo che comprime l'html\     
      */
     public function compressHtml($html)
     {

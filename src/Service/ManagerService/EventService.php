@@ -43,17 +43,6 @@ class EventService extends ControlService
         return $aEvent;
     }
 
-    /**
-     * Recupera i dati di un singolo utente
-     *
-     * Esempio chiamata
-     * http://ale.testapi.it/ws/event/1
-     *
-     * Risposte:
-     * Nessun Risultato: {"result":false,"errorCode":5,"msg":"Not result query"}
-     * OK: {"result":true,"msg":{"id":4,"surname":"Pacifici","email":"aleweb87@gmail.com","eventname":"sandrino","password":"12qwaszx"}}
-     * Exception : {"result":false,"errorCode":2,"msg":"Message Exception"}
-     */
     public function getOneById(int $id): object
     {
         $this->getDataInput('getOneEvent', $this->container->getParameter('ws.limit.getOne'));
@@ -81,31 +70,6 @@ class EventService extends ControlService
         return $this->response;
     }
 
-    /**
-     * Esempio chiamata
-     * /ws/event
-     *
-     * Recupera tutti gli utenti
-     * Risposte:
-     * {
-     *   "result": true,
-     *   "msg": {
-     *       "1": {
-     *           "id": 1,
-     *           "surname": "Pacifici",
-     *           "email": "adonmargotkira@cani.it",
-     *           "eventname": "aleweb87",
-     *           "password": "03a845a382644cc7da75dc6fecbd52bb",x
-     *       },
-     *       "4": {
-     *           "id": 4,
-     *           "surname": "Pacifici",
-     *           "email": "aleweb87@gmail.com",
-     *           "eventname": "sandrino",
-     *           "password": "12qwaszx",
-     *       }
-     * Exception : {"result":false,"errorCode":2,"msg":"Message Exception"}
-     */
     public function getAll(): object
     {
         $this->getDataInput('getAllEvents', $this->container->getParameter('ws.limit.getAll'));
@@ -131,26 +95,6 @@ class EventService extends ControlService
         return $this->response;
     }
 
-    /**
-     * Creazione di un utente
-     *
-     * /ws/event
-     * Esempio chiamata:
-     *  {
-     *      "name" : "Alessandro",
-     *      "surname": "Pacifici",
-     *      "email": "ap.pacifici@gmail.com",
-     *      "password": "12qwaszx",
-     *      "role": "1",
-     *      "status": "1"
-     *  }
-     *
-     * Risposte:
-     * OK: {"result":true}
-     * Campi mancanti: {"result":false,"errorCode":1,"msg":"Campi mancanti: USERNAME"}
-     * Exception: {"result":false,"errorCode":2,"msg":"Message Exception"}
-     *
-     */
     public function create(object $input = null): object
     {
         $this->getDataInput('createEvent', $this->container->getParameter('ws.limit.create'), $input);
@@ -185,22 +129,6 @@ class EventService extends ControlService
         return $this->response;
     }
 
-
-
-    /**
-     *   Esempio chiamata:
-     *
-     *   EndPoint: http://ale.testapi.it/ws/event/2
-     *   {
-     *       "email": "aleweb87.com",
-     *       "eventname": "sandro",
-     *   }
-     * Risposte:
-     * OK: {"result":true}
-     * Campi mancanti: {"result":false,"errorCode":1,"msg":"Campi mancanti: USERNAME"}
-     * Exception: {"result":false,"errorCode":2,"msg":"Message Exception"}
-     * Id EndPoint Mancante: {"result":false,"errorCode":4,"msg":"Missing required param ID in endPoint"}
-     */
     public function update(int|null $id, object $input = null): object
     {
         $this->getDataInput('updateEvent', $this->container->getParameter('ws.limit.update'), $input);
@@ -249,19 +177,6 @@ class EventService extends ControlService
         return $this->response;
     }
 
-    /**
-     * Effettua la cancellazione di un record
-     *
-     * Esempio chiamate:
-     * DELETE: http://ale.testapi.it/ws/event/1
-     *
-     * Risposte
-     * OK: {"result":true}
-     * Id EndPoint Mancante: {"result":false,"errorCode":4,"msg":"Missing required param ID in endPoint"}
-     * Not Result: {"result":false,"errorCode":5,"data":"Not result query: findEvent"}
-     * Exception: {"result":false,"errorCode":2,"data":"Message Exception"}
-     *
-     */
     public function delete(int|null $id, object $input = null): object
     {
         $this->getDataInput('deleteEvent', $this->container->getParameter('ws.limit.delete'), $input);

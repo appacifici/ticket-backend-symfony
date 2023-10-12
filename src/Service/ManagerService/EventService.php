@@ -112,8 +112,7 @@ class EventService extends ControlService
 
         try {
             $this->timeTracker->start("getAll", "getAll");
-            $events  = $this->doctrine->getRepository(Event::class)->findBy([]);
-
+            $events  = $this->doctrine->getRepository(Event::class)->findBy([]);            
             $aEvent = [];
             foreach ($events as $event) {
                 $aEvent[$event->getId()]        = $this->getDataEvent($event);

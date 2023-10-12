@@ -1,10 +1,10 @@
 parameters:
        
-    ws.limit.create:                    2000
-    ws.limit.update:                    2000
-    ws.limit.delete:                    2000
-    ws.limit.getAll:                    2000
-    ws.limit.getOne:                    2000
+    ws.limit.create:                    500
+    ws.limit.update:                    500
+    ws.limit.delete:                    500
+    ws.limit.getAll:                    500
+    ws.limit.getOne:                    500
         
     ws.code.resMissingFields:           1
     ws.code.errorValidateEntity:        2

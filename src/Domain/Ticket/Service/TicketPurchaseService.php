@@ -6,13 +6,13 @@ namespace App\Domain\Ticket\Service;
 
 use App\Domain\Email\Service\EmailService;
 use App\Domain\Sector\Service\SectorService;
-use App\Domain\Ticket\DTO\TicketPurchaseDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
 use App\Domain\Ticket\Exception\TicketPurchaseSectorException;
 use App\Domain\Ticket\Interface\TicketPurchaseServiceInterface;
 use App\Domain\Place\Service\PlaceService;
 use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
+use App\Domain\Ticket\Interface\TicketPurchaseInterface;
 use App\Domain\Ticket\Object\TicketPurchaseSuccess;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Exception;
@@ -34,13 +34,13 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
 
     private array $events;
     private array $ticketForEvent;
-    private array $ticketForSectorEvent;
+    private array $ticketForSectorEvent = [];
 
     public function __construct(
         private EntityManagerInterface  $doctrine,
         private SectorService           $sectorService,
         private PlaceService            $placeService,
-        private TicketService           $ticketService,
+        private TicketService          $ticketService,
         private EmailService            $emailService,
     ) {
     }
@@ -49,7 +49,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
      * Metodo principale che si occupa dell'acquisto dei biglietti
      * $ticketPurchases array of PurchaseDTO
      */
-    public function purchaseTicket(TicketPurchaseDTO $ticketPurchases): TicketPurchaseSuccess
+    public function purchaseTicket(TicketPurchaseInterface $ticketPurchases): TicketPurchaseSuccess
     {
         $purchases = $ticketPurchases->getPurchases();
         foreach ($purchases as $purchase) {
@@ -67,10 +67,11 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
         */
         $checkLimitPurchase = $this->checkLimitPurchase();
         if ($checkLimitPurchase instanceof TicketPurchaseLimitException) {
+            /** @psalm-suppress InvalidThrow */
             throw $this->checkLimitPurchase();
         }
 
-        $ticketsSoldOut = $this->ticketsSoldOut($purchases);
+        $ticketsSoldOut = $this->ticketsSoldOut();
         if ($ticketsSoldOut instanceof TicketPurchaseSectorException) {
             throw $ticketsSoldOut;
         }
@@ -123,7 +124,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */
-    private function checkLimitPurchase(): bool | TicketPurchaseLimitException
+    private function checkLimitPurchase():  TicketPurchaseLimitException|bool
     {
         if (self::MAX_EVENT_TRANSACTION != -1 && count($this->ticketForEvent) > self::MAX_EVENT_TRANSACTION) {
             $ticketPurchaseLimitException =  new TicketPurchaseLimitException('Ticket for event Limit Exceeded');
@@ -171,7 +172,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
     }
 
     private function ticketPlaceFree(array $purchases): bool|TicketPurchasePlaceException
-    {
+    {        
         $ticketPurchasePlaceException = new TicketPurchasePlaceException();
         foreach ($purchases as $purchase) {
             if (!is_null($purchase->getPlace())) {

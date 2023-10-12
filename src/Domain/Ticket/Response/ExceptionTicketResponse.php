@@ -22,7 +22,9 @@ class ExceptionTicketResponse
         $self->response['errors'][0]['code']                 = $e->getErrorCode();
         $self->response['errors'][0]['event']['id']          = $e->getEvent()->getId();
         $self->response['errors'][0]['event']['name']        = $e->getEvent()->getName();
+        /**  @psalm-suppress PossiblyNullReference */
         $self->response['errors'][0]['event']['location']    = $e->getEvent()->getLocation()->getName();
+        /**  @psalm-suppress PossiblyNullReference */
         $self->response['errors'][0]['event']['date']        = $e->getEvent()->getDate()->format('Y-m-d H:i:s');
         return $self;
     }

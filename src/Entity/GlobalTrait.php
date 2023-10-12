@@ -12,45 +12,25 @@ trait GlobalTrait
 
     #[ORM\Column(name:"update_at", type: "datetime", length: 10, nullable:true)]
     private $updatedAt;
-
-    /**
-     * Get createdAt
-     *
-     * @return datetime
-     */
-    public function getCreatedAt()
+    
+    public function getCreatedAt() :DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     * Set createdAt
-     *
-     * @param datetime $createdAt
-     */
-    public function setCreatedAt( \DateTime $createdAt)
+    public function setCreatedAt( DateTime $createdAt) :self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * Get updatedAt
-     *
-     * @return datetime
-     */
-    public function getUpdatedAt()
+    public function getUpdatedAt():DateTime
     {
         return $this->updatedAt;
     }
 
-    /**
-     * Set updatedAt
-     *
-     * @param datetime $updatedAt
-     */
-    public function setUpdatedAt( \Datetime $updatedAt)
+    public function setUpdatedAt( DateTime $updatedAt):self
     {
         $this->updatedAt = $updatedAt;
 

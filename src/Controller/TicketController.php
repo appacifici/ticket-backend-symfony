@@ -26,17 +26,17 @@ class TicketController
         LoggerInterface $logger,
         TicketPurchaseInterface $ticketPurchase,
         TicketPurchaseService $ticketPurchaseService
-    ) {
-        try {
+    ):JsonResponse {
+        try {            
             $requestData            = $request->toArray();
-            $ticketPurchaseDTO      = $ticketPurchase->create($requestData);
+            $ticketPurchaseDTO      = $ticketPurchase->create($requestData);            
             $ticketPurchaseSuccess  = $ticketPurchaseService->purchaseTicket($ticketPurchaseDTO);
             $ticketPurchaseResponse = TicketPurchaseResponse::ticketPurchaseSuccessResponse($ticketPurchaseSuccess);
             $response               = $ticketPurchaseResponse->serialize(); 
         } catch (TicketPurchaseDTOException $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseDTOException($e);
             $response = $exceptionTicketResponse->serialize();
-        } catch (TicketPurchaseLimitException $e) {
+        } catch (TicketPurchaseLimitException $e) {            
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseLimitException($e);
             $response = $exceptionTicketResponse->serialize();
         } catch (TicketPurchaseSectorException $e) {
@@ -48,7 +48,7 @@ class TicketController
         } catch (Exception $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketGenericException($e);
             $response = $exceptionTicketResponse->serialize();
-        }                
+        }                      
         return new JsonResponse($response);
     }
 }

@@ -72,12 +72,12 @@ class Location
         $this->sectors = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -106,7 +106,7 @@ class Location
         return $this->event;
     }
 
-    public function setEvent(Event $event): self
+    public function setEvent(?Event $event): self
     {
         $this->event = $event;
 
@@ -126,18 +126,6 @@ class Location
         if (!$this->sectors->contains($sector)) {
             $this->sectors->add($sector);
             $sector->setLocation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSector(Sector $sector): self
-    {
-        if ($this->sectors->removeElement($sector)) {
-            // set the owning side to null (unless already changed)
-            if ($sector->getLocation() === $this) {
-                $sector->setLocation(null);
-            }
         }
 
         return $this;

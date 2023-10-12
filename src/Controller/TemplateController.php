@@ -563,12 +563,9 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * Metodo che effettua il rende di tutte le pagine se sta in cache la oagibna la prende da li
-     * @param type $request
-     * @param type $section
-     * @return Response
+     * Metodo che effettua il rende di tutte le pagine se sta in cache la oagibna la prende da li 
      */
-    public function getPageFromHttpCache($request, $section = 'homepage.xml', $enabledCache = true, $params = false)
+    public function getPageFromHttpCache( Request $request, string $section = 'homepage.xml', bool $enabledCache = true, $params = null) : Response
     {
         $this->setParameters();
         $eTag = md5($request->server->get('REQUEST_URI')  . '?&mobile=' . $this->globalConfigManager->isMobile() . '&isamp=' . $this->globalConfigManager->getAmpActive() . '&v=1 ');

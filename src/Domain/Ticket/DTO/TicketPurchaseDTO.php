@@ -14,7 +14,7 @@ use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 class TicketPurchaseDTO implements TicketPurchaseInterface
 {
     private array $purchaseInterfaces;
-    protected readonly array $finalPurchaseInterfaces;
+    protected readonly array $finalPurchaseInterfaces; /** @phpstan-ignore-line */
 
     public function __construct(
         private EntityManagerInterface $doctrine
@@ -65,6 +65,7 @@ class TicketPurchaseDTO implements TicketPurchaseInterface
             $this->purchaseInterfaces[]   = $purchaseDTO->create($purchaseData, $index);
         }
 
+        
         $this->finalPurchaseInterfaces = $this->purchaseInterfaces;
 
         return $this;

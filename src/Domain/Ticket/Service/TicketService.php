@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Ticket\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use App\Domain\Ticket\Interface\TickerServiceInterface;
+use App\Domain\Ticket\Interface\TicketServiceInterface;
 use App\Entity\Ticket;
 use App\Entity\Event;
 use App\Entity\Place;
@@ -17,7 +17,7 @@ use Exception;
  * Classe spacifica che gestisce il solo processo di acquisti dei biglietti
  * Potendo crescere di molto ho preferito fare un servizio specifico a differenza del servizio globale per il domain Sector
  */
-class TicketService implements TickerServiceInterface
+class TicketService implements TicketServiceInterface
 {
     public function __construct(
         private EntityManagerInterface $doctrine,

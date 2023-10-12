@@ -10,7 +10,7 @@ use App\Entity\Sector;
 use App\Entity\Ticket;
 use App\Entity\User;
 
-interface TickerServiceInterface
+interface TicketServiceInterface
 {
     public function generateTicket(Event $event, Sector $sector, Place $place, User $user, int $ticketIndex): Ticket;
 }

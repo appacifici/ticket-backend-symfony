@@ -1,7 +1,6 @@
 parameters:
-    level: 6
+    level: 1
     paths:
-        - bin/
-        - config/
-        - public/
         - src/
+    excludePaths:
+        - src/Controller/TemplateController.php

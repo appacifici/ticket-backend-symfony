@@ -167,33 +167,30 @@ class Sector
         return $this;
     }
 
-    public function getEvent(): ?Event
+    public function getEvent(): Event
     {
         return $this->event;
     }
 
-    public function setEvent(?Event $event): self
+    public function setEvent(Event $event): self
     {
         $this->event = $event;
 
         return $this;
     }
 
-    public function getLocation(): ?Location
+    public function getLocation(): Location
     {
         return $this->location;
     }
 
-    public function setLocation(?Location $location): self
+    public function setLocation(Location $location): self
     {
         $this->location = $location;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Place>
-     */
     public function getPlaces(): Collection
     {
         return $this->places;
@@ -204,18 +201,6 @@ class Sector
         if (!$this->places->contains($place)) {
             $this->places->add($place);
             $place->setSector($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlace(Place $place): self
-    {
-        if ($this->places->removeElement($place)) {
-            // set the owning side to null (unless already changed)
-            if ($place->getSector() === $this) {
-                $place->setSector(null);
-            }
         }
 
         return $this;

@@ -12,7 +12,7 @@ class TicketPurchaseLimitException extends Exception
     private Event $event;
     private int $errorCode;
 
-    public function errorMessage()
+    public function errorMessage(): string
     {
         $errorMsg = 'Error on line ' . $this->getLine() . ' in ' . $this->getFile()
         . ': <b>' . $this->getMessage() . '</b>';

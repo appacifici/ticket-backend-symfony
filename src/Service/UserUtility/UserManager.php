@@ -103,36 +103,36 @@ class UserManager
     }
 
 
-    public function getGroupPermission()
-    {
-        if (!empty($this->groupPermission)) {
-            return $this->groupPermission;
-        }
+//     public function getGroupPermission()
+//     {
+//         if (!empty($this->groupPermission)) {
+//             return $this->groupPermission;
+//         }
 
-        $listGroupPermissions = $this->doctrine->getRepository(GroupSectionPermission::class)->findAll();
+//         $listGroupPermissions = $this->doctrine->getRepository(GroupSectionPermission::class)->findAll();
 
-        $entityColumns = $this->doctrine->getClassMetadata(GroupSectionPermission::class)->getFieldNames();
-        $aGroups = array();
+//         $entityColumns = $this->doctrine->getClassMetadata(GroupSectionPermission::class)->getFieldNames();
+//         $aGroups = array();
 
-        foreach ($listGroupPermissions as $listGroupPermission) {
-            $itemGroups = explode('-', $listGroupPermission->getPermission());
+//         foreach ($listGroupPermissions as $listGroupPermission) {
+//             $itemGroups = explode('-', $listGroupPermission->getPermission());
 
-            $newGroups = array('read' => $itemGroups[0],
-                            'edit' =>  ( !empty($itemGroups[1]) ?  $itemGroups[1] : 0 ),
-                            'remove' => !empty($itemGroups[2]) ?  $itemGroups[2] : 0,
-                            'create' => !empty($itemGroups[3]) ?  $itemGroups[3] : 0 );
+//             $newGroups = array('read' => $itemGroups[0],
+//                             'edit' =>  ( !empty($itemGroups[1]) ?  $itemGroups[1] : 0 ),
+//                             'remove' => !empty($itemGroups[2]) ?  $itemGroups[2] : 0,
+//                             'create' => !empty($itemGroups[3]) ?  $itemGroups[3] : 0 );
 
-//            //Se l'utente è un super admin forze tutti i permessi
-//            if( $listGroupPermission->getGroup()->getId() == 1 ) {
-//                $newGroups = array('read' => 1, 'edit' => 1, 'remove' => 1, 'create' => 1 );
-//            }
+// //            //Se l'utente è un super admin forze tutti i permessi
+// //            if( $listGroupPermission->getGroup()->getId() == 1 ) {
+// //                $newGroups = array('read' => 1, 'edit' => 1, 'remove' => 1, 'create' => 1 );
+// //            }
 
-            $aGroups[$listGroupPermission->getGroup()->getId()][$listGroupPermission->getGroupSection()->getRoute()] = $newGroups;
-        }
+//             $aGroups[$listGroupPermission->getGroup()->getId()][$listGroupPermission->getGroupSection()->getRoute()] = $newGroups;
+//         }
 
-        $this->groupPermission =  json_decode(json_encode($aGroups), false);
-        return $this->groupPermission;
-    }
+//         $this->groupPermission =  json_decode(json_encode($aGroups), false);
+//         return $this->groupPermission;
+//     }
 
     public function getPermissionByGroup($group = false)
     {

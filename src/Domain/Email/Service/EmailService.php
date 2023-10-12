@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Email\Service;
 
-use App\Domain\Ticket\DTO\TicketPurchaseDTO;
+use App\Domain\Ticket\Interface\TicketPurchaseInterface;
 use App\Domain\Ticket\Object\TicketPurchaseSuccess;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -20,7 +20,7 @@ class EmailService
     }
 
     public function sendTicketPusrchaseEmail(
-        TicketPurchaseDTO $ticketPurchases,
+        TicketPurchaseInterface $ticketPurchases,
         TicketPurchaseSuccess $ticketPurchaseSuccess
     ): void {
 

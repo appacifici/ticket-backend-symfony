@@ -159,7 +159,7 @@ class Event
     {
         if (!$this->sectors->contains($sector)) {
             $this->sectors->add($sector);
-            $sector->setLocation($this);
+            $sector->setEvent($this);
         }
 
         return $this;
@@ -169,20 +169,17 @@ class Event
     {
         if ($this->sectors->removeElement($sector)) {
             // set the owning side to null (unless already changed)
-            if ($sector->getLocation() === $this) {
-                $sector->setLocation(null);
+            if ($sector->getEvent() === $this) {
+                $sector->setEvent(null);
             }
         }
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Place>
-     */
+    
     public function getPlaces(): Collection
     {
-        return $this->places;
+        return $this->places; 
     }
 
     public function addPlace(Place $place): self
@@ -206,10 +203,7 @@ class Event
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Ticket>
-     */
+    
     public function getTickets(): Collection
     {
         return $this->tickets;
@@ -230,10 +224,12 @@ class Event
         if ($this->tickets->removeElement($ticket)) {
             // set the owning side to null (unless already changed)
             if ($ticket->getEvent() === $this) {
-                $ticket->setEvent(null);
+                //$ticket->setEvent(null);
             }
         }
 
         return $this;
     }
+
+    
 }

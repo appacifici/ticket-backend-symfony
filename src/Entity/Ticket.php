@@ -54,7 +54,7 @@ class Ticket
     #[Assert\NotBlank(message: 'Inserire il riferimento al posto')]
     #[ManyToOne(targetEntity: Place::class, inversedBy: 'ticket')]
     #[JoinColumn(name: 'place_id', referencedColumnName: 'id')]
-    private Place $place;
+    private ?Place $place;
     //---------------------------------------------------------------------------
 
     #[Assert\NotBlank(message: 'Inserire il riferimento all\'utente')]
@@ -104,7 +104,7 @@ class Ticket
         return $this;
     }
 
-    public function getEvent(): ?Event
+    public function getEvent(): Event
     {
         return $this->event;
     }
@@ -140,12 +140,12 @@ class Ticket
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 

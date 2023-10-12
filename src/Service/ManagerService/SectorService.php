@@ -43,8 +43,8 @@ class SectorService extends ControlService {
         $aSector['placeType']        = $sector->getPlaceType();                                                                               
         $aSector['event']['id']      = $sector->getEvent()->getId();                           
         $aSector['event']['name']    = $sector->getEvent()->getName();                           
-        $aSector['sector']['id']     = $sector->getLocation()->getId();                           
-        $aSector['sector']['name']   = $sector->getLocation()->getName();                           
+        $aSector['location']['id']   = $sector->getLocation()->getId();                           
+        $aSector['location']['name'] = $sector->getLocation()->getName();                           
         return $aSector;
     }
     

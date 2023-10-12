@@ -83,7 +83,7 @@ class AlertUtility
         }
 
         if ($totalDuration > $this->limitWrite) {
-            $this->setAlert($process, "Superato il limite di tempo di $this->limitWrite ms, tempo totale esecuzione script: $totalDuration ms ", 'limitWrite');
+            $this->setAlert($process, "Superato il limite di tempo di $this->limitWrite ms, tempo totale esecuzione script: $totalDuration ms ");
         }
 
         foreach ($events as $event) {

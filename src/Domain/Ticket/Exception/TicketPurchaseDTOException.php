@@ -49,7 +49,7 @@ class TicketPurchaseDTOException extends Exception
         return $this->hasException;
     }
 
-    public function errorMessage()
+    public function errorMessage():string
     {
         $errorMsg = 'Error on line ' . $this->getLine() . ' in ' . $this->getFile()
         . ': <b>' . $this->getMessage() . '</b>';
@@ -135,7 +135,7 @@ class TicketPurchaseDTOException extends Exception
         return $this->puschases;
     }
 
-    public function setPuschases(int $field, ?int $key): self
+    public function setPuschases(int $field, int $key): self
     {
         $this->hasException         = true;
         $this->puschases[$key][]    = $field;

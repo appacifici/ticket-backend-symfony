@@ -90,6 +90,10 @@ class User
     private string $password;
     //---------------------------------------------------------------------------
 
+    public function __construct()
+    {        
+    }
+
     public function getId(): ?int
     {
         return $this->id;

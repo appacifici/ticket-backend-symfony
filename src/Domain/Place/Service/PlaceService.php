@@ -7,6 +7,7 @@ namespace App\Domain\Place\Service;
 use App\Entity\Place;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Domain\Place\Interface\PlaceServiceInterface;
+use Exception;
 
 /**
  * Creato servizio non specifico in quanto ipoteticamente questo domain non dovrebbe avere molte funzioni e quindi tutti i servizi di questa entita
@@ -25,13 +26,16 @@ class PlaceService implements PlaceServiceInterface
     public function getIsFree(int $placeId): bool
     {
         $place = $this->doctrine->getRepository(Place::class)->findOneBy(['id' => $placeId]);
+        if( empty( $place ) ) {
+            throw new Exception('Record entity Place ('.$placeId.') not found');
+        }
         return $place->getFree() == 1 ? true : false;
     }
 
     /**
      * Setta a db il campo free
      */
-    public function setNotFree(Place $place)
+    public function setNotFree(Place $place): void
     {
         $place->setFree(self::PLACE_NOT_FREE);
         $this->doctrine->persist($place);

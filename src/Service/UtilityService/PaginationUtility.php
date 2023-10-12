@@ -103,6 +103,7 @@ class PaginationUtility
      */
     public function init($tot, $numLinks = 10, $noLink = false, $url = false, $absolute = false)
     {
+        $retval = '';
         $step = $this->step;
         $this->absolute = $absolute;
         $this->linkStructure = $this->getLink($url);
@@ -137,6 +138,7 @@ class PaginationUtility
 
     public function getPaginationInfiniteScroll()
     {
+        $retval = '';
         if ($this->totalPages <= 1) {
             return '';
         }

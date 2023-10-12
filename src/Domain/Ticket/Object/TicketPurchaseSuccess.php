@@ -14,13 +14,13 @@ class TicketPurchaseSuccess
     {
     }
 
-    public function getTickets()
+    public function getTickets(): array
     {
         return $this->tickets;
     }
 
-    public function addTicket(Ticket $ticket)
+    public function addTicket(Ticket $ticket): void
     {
-        return $this->tickets[] = $ticket;
+        $this->tickets[] = $ticket;
     }
 }

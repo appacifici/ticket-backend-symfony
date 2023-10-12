@@ -141,24 +141,24 @@ class Place
         return $this;
     }
 
-    public function getEvent(): ?Event
+    public function getEvent(): Event
     {
         return $this->event;
     }
 
-    public function setEvent(?Event $event): self
+    public function setEvent(Event $event): self
     {
         $this->event = $event;
 
         return $this;
     }
 
-    public function getSector(): ?Sector
+    public function getSector(): Sector
     {
         return $this->sector;
     }
 
-    public function setSector(?Sector $sector): self
+    public function setSector(Sector $sector): self
     {
         $this->sector = $sector;
 
@@ -169,23 +169,7 @@ class Place
     {
         return $this->ticket;
     }
-
-    public function setTicket(?Ticket $ticket): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($ticket === null && $this->ticket !== null) {
-            $this->ticket->setPlace(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($ticket !== null && $ticket->getPlace() !== $this) {
-            $ticket->setPlace($this);
-        }
-
-        $this->ticket = $ticket;
-
-        return $this;
-    }
+    
 }
 
 //ES: Fila 1 - Posto 5 - 50 - 1 ( colplay ) - 1 ( Tibuna D'onore )

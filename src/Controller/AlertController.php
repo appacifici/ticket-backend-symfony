@@ -11,7 +11,7 @@ class AlertController extends TemplateController
     /**
      * @Route( "/alert", name="alert" )
      */
-    public function alertction(Request $request)
+    public function alertction(Request $request): Response
     {
         return $this->getPageFromHttpCache($request, 'alert.xml');
     }

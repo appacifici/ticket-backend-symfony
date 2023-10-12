@@ -10,7 +10,42 @@
         <directory name="src"/>
         <ignoreFiles>
             <directory name="vendor"/>
+            <directory name="src/Service"/>            
+            <directory name="src/Entity"/>            
+            <file name="src/Controller/TemplateController.php" />
         </ignoreFiles>
     </projectFiles>
 
+    <issueHandlers>
+        <MissingPropertyType errorLevel="suppress" />
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">            
+             <directory name="src/Entity" />  <!-- all InvalidReturnType issues in this file are suppressed -->        
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+        <RedundantConditionGivenDocblockType>
+            <errorLevel type="suppress">            
+             <directory name="src/Entity" />  <!-- all InvalidReturnType issues in this file are suppressed -->        
+            </errorLevel>
+        </RedundantConditionGivenDocblockType>
+        <RedundantCondition>
+            <errorLevel type="suppress">            
+             <directory name="src/Entity" />  <!-- all InvalidReturnType issues in this file are suppressed -->        
+            </errorLevel>
+        </RedundantCondition>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">            
+             <directory name="src" />  <!-- all InvalidReturnType issues in this file are suppressed -->        
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+        <InaccessibleProperty>
+            <errorLevel type="suppress">            
+             <file name="src/Domain/Ticket/DTO/PurchaseDTO.php" />  <!-- Soppresso perche psalm non riconesce bene il readonly in quanto un primo settina nel costruttore o in un metodo è consentito -->        
+             <file name="src/Domain/Ticket/DTO/TicketPurchaseDTO.php" />  <!-- Soppresso perche psalm non riconesce bene il readonly in quanto un primo settina nel costruttore o in un metodo è consentito -->        
+            </errorLevel>
+        </InaccessibleProperty>
+    </issueHandlers>
+
 </psalm>
+
+

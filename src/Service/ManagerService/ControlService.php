@@ -119,7 +119,7 @@ class ControlService {
         $emptyField = [];
         $this->timeTracker->start( "controlField", "controlField" );
         
-        
+        $msg = '';
         try {            
         //     //Se è richiesto almeno uno dei campi
             if( $typeCheck == $this::MIN_ONE_REQUIRED ) {
@@ -155,7 +155,7 @@ class ControlService {
             if( !empty( $emptyField ) ) {                           
                 $this->response->result     = false;     
                 $this->response->errorCode  = $this->container->getParameter( 'ws.code.resMissingFields' );       
-                $this->response->data        = $msg;      
+                $this->response->data       = $msg;      
                 $this->timeTracker->stop( "controlField" );
 
                 $this->alertUtility->setCallResponse( $this->process, print_r( $this->response, true ), 'Parametri chiamata mancanti' );  
@@ -277,9 +277,11 @@ class ControlService {
         return true;        
     } 
     
+    
     protected function getRelEntity( string $entity, int $id ) : Event|Sector|Location|bool {
         $this->timeTracker->start( "getRelEntity", "getRelEntity" );
         try {
+            //TODO: creare metodo che gestisca centralizzato questo switch
             switch( $entity ) {
                 case 'Event':                 
                     $entity  = $this->doctrine->getRepository( Event::class )->findOneBy( ["id"=>$id] );
@@ -323,9 +325,7 @@ class ControlService {
     }
     
     /**
-     * Verifica se l'oggetto recuperato esiste o e vuoto in caso
-     * @param Entity $entity
-     * @return bool
+     * Verifica se l'oggetto recuperato esiste o e vuoto in caso     
      */
     protected function checkResultQuery( mixed $entity , string $section ) :bool {
         if( empty( $entity ) ) {

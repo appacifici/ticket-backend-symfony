@@ -1,5 +1,6 @@
 var
 vendor
+ticket-backend-symfony
 
 ###> phpstan/phpstan ###
 phpstan.neon

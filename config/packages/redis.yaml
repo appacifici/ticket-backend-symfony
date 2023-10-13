@@ -1,6 +1,6 @@
 parameters:    
     
-    redis_host:                         redis    
+    redis_host:                         redisticket    
     redis_sncredis_db_n:                1
     redis_sncredisDoctrinemetadata:     2 
     redis_sncredisDoctrineResult:       3

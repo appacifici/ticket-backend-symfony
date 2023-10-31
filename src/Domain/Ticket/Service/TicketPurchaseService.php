@@ -121,11 +121,6 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
     }
 
 
-    private function saveTicket() {
-        //switch 
-    } 
-
-
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
      */

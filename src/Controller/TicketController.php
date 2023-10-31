@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
 use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
-use App\Domain\Ticket\Service\TicketPurchaseService;
+use App\Domain\Ticket\Interface\TicketPurchaseServiceInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +25,7 @@ class TicketController
         Request $request,
         LoggerInterface $logger,
         TicketPurchaseInterface $ticketPurchase,
-        TicketPurchaseService $ticketPurchaseService
+        TicketPurchaseServiceInterface $ticketPurchaseService
     ): JsonResponse {
         try {
             $requestData             = $request->toArray();

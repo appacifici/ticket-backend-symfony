@@ -28,27 +28,34 @@ class TicketController
         TicketPurchaseService $ticketPurchaseService
     ): JsonResponse {
         try {
-            $requestData            = $request->toArray();
-            $ticketPurchaseDTO      = $ticketPurchase->create($requestData);
-            $ticketPurchaseSuccess  = $ticketPurchaseService->purchaseTicket($ticketPurchaseDTO);
-            $ticketPurchaseResponse = TicketPurchaseResponse::ticketPurchaseSuccessResponse($ticketPurchaseSuccess);
-            $response               = $ticketPurchaseResponse->serialize();
+            $requestData             = $request->toArray();
+            $ticketPurchaseDTO       = $ticketPurchase->create($requestData);
+            $ticketPurchaseSuccess   = $ticketPurchaseService->purchaseTicket($ticketPurchaseDTO);
+            $ticketPurchaseResponse  = TicketPurchaseResponse::ticketPurchaseSuccessResponse($ticketPurchaseSuccess);
+            $response                = $ticketPurchaseResponse->serialize();
+            $responseCode            = jsonResponse::HTTP_OK;
         } catch (TicketPurchaseDTOException $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseDTOException($e);
-            $response = $exceptionTicketResponse->serialize();
+            $response                = $exceptionTicketResponse->serialize();
+            $responseCode            = $exceptionTicketResponse->getHttpResponseCode();
         } catch (TicketPurchaseLimitException $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseLimitException($e);
             $response = $exceptionTicketResponse->serialize();
+            $responseCode            = $exceptionTicketResponse->getHttpResponseCode();
         } catch (TicketPurchaseSectorException $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchaseSectorException($e);
             $response = $exceptionTicketResponse->serialize();
+            $responseCode            = $exceptionTicketResponse->getHttpResponseCode();
         } catch (TicketPurchasePlaceException $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketPurchasePlaceException($e);
             $response = $exceptionTicketResponse->serialize();
+            $responseCode            = $exceptionTicketResponse->getHttpResponseCode();
         } catch (Exception $e) {
             $exceptionTicketResponse = ExceptionTicketResponse::createTicketGenericException($e);
             $response = $exceptionTicketResponse->serialize();
+            $responseCode            = $exceptionTicketResponse->getHttpResponseCode();
         }
-        return new JsonResponse($response);
+        
+        return new JsonResponse($response, $responseCode );
     }
 }

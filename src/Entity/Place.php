@@ -42,7 +42,7 @@ class Place
     #[Assert\NotBlank(message: 'Inserire numero del posto')]
     #[Assert\Type(
         type: 'string',
-        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+        message: 'Il valore {{ value }} non è del tipo aspettato: {{ type }}.',
     )]
     #[Assert\Length(
         min: 1,
@@ -56,8 +56,8 @@ class Place
 
     #[Assert\NotBlank(message: 'Inserire il prezzo del posto')]
     #[Assert\Type(
-        type: 'smallint',
-        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+        type: 'integer',
+        message: 'Il valore {{ value }} non è del tipo aspettato: {{ type }}.',
     )]
     #[ORM\Column(name:"price", type:"smallint")]
     private int $price;
@@ -65,8 +65,8 @@ class Place
 
     #[Assert\NotBlank(message: 'Inserire se il posto è libero')]
     #[Assert\Type(
-        type: 'smallint',
-        message: 'Il valore {{ value }} nel e del tipo aspettato: {{ type }}.',
+        type: 'integer',
+        message: 'Il valore {{ value }} non è del tipo aspettato: {{ type }}.',
     )]
     #[ORM\Column(name:"free", type:"smallint", length: 1, options: ["default" => 1])]
     private int $free;

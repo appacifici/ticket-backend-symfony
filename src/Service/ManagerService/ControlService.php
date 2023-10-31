@@ -15,6 +15,7 @@ use App\Service\UtilityService\AlertUtility;
 use App\Entity\User;
 use Exception;
 use stdClass;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /**
@@ -206,6 +207,7 @@ class ControlService
                 $this->response->errorCode  = $this->container->getParameter('ws.code.errorValidateEntity');
                 $this->response->data       = 'Error in fields';
                 $this->response->error      = $aErrors;
+                $this->response->httpCode   = Response::HTTP_BAD_REQUEST;
 
                 $this->alertUtility->setCallResponse($this->process, print_r($this->response, true), 'Errore validazione entità');
 
@@ -298,10 +300,10 @@ class ControlService
             }
 
             if (empty($entity)) {
-                throw new \Exception('Not found query ' . $entity);
+                throw new \Exception('Not found query ' . $entity); 
             }
         } catch (\Exception $e) {
-            $this->setDebugException($e, 'getRelEntity');
+            $this->setDebugException($e, 'getRelEntity'); 
             return false;
         }
         $this->timeTracker->stop("getRelEntity");
@@ -316,6 +318,7 @@ class ControlService
 
         $this->response->result     = false;
         $this->response->code       = ErrorCodes::INTERNAL_SERVER_ERROR;
+        $this->response->httpCode   = Response::HTTP_INTERNAL_SERVER_ERROR;
         $this->response->data       = $e->getMessage();
 
         $this->alertUtility->setError($this->process, print_r($this->response, true), 'Resp');
@@ -334,6 +337,7 @@ class ControlService
             $this->response->result      = false;
             $this->response->code        = ErrorCodes::NO_QUERY_RESULT;
             $this->response->data        = "Not result query: $section";
+            $this->response->httpCode    = Response::HTTP_UNPROCESSABLE_ENTITY;
 
             $this->alertUtility->setCallResponse($this->process, print_r($this->response, true), 'Resp');
 

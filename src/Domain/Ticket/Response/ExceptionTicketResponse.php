@@ -8,11 +8,13 @@ use App\Domain\Ticket\Exception\TicketPurchaseDTOException;
 use App\Domain\Ticket\Exception\TicketPurchaseLimitException;
 use App\Domain\Ticket\Exception\TicketPurchasePlaceException;
 use App\Domain\Ticket\Exception\TicketPurchaseSectorException;
+use Symfony\Component\HttpFoundation\Response;
 use Exception;
 
 class ExceptionTicketResponse
 {
     private array $response;
+    private int $httpResponseCode = Response::HTTP_OK;
 
     public static function createTicketPurchaseLimitException(TicketPurchaseLimitException $e): self
     {
@@ -26,6 +28,7 @@ class ExceptionTicketResponse
         $self->response['errors'][0]['event']['location']    = $e->getEvent()->getLocation()->getName();
         /**  @psalm-suppress PossiblyNullReference */
         $self->response['errors'][0]['event']['date']        = $e->getEvent()->getDate()->format('Y-m-d H:i:s');
+        $self->httpResponseCode                              = Response::HTTP_OK;
         return $self;
     }
 
@@ -51,7 +54,8 @@ class ExceptionTicketResponse
                 }
             }
         }
-
+        $self->httpResponseCode                                         = Response::HTTP_BAD_REQUEST;
+        
         /*
             Questa gestione dell'eccezione a differenza di quella sopra al primo errore blocca l'esecuzione dello script, restituendo il primo errore
             in modo tale da evitare di fare ulteriori query a db se gia presente un errore. Differnte invece dal controllo sopra che controlla tutto il formato di chiamata
@@ -62,6 +66,7 @@ class ExceptionTicketResponse
             $self->response['errors'][0]['message']                     = TicketPurchaseDTOException::PURCHASE_ERROR_MESSAGE[TicketPurchaseDTOException::NOT_FOUND_ENTITY_EVENT];
             $self->response['errors'][0]['event']['id']                 = $e->getNotFoundEntityEvent();
             $self->response['errors'][0]['event']['puschaseIndex']      = $e->getPuschaseIndex();
+            $self->httpResponseCode                                     = Response::HTTP_UNPROCESSABLE_ENTITY;
         }
 
         if (!empty($e->getNotFoundEntitySector())) {
@@ -69,20 +74,23 @@ class ExceptionTicketResponse
             $self->response['errors'][0]['message']                     = TicketPurchaseDTOException::PURCHASE_ERROR_MESSAGE[TicketPurchaseDTOException::NOT_FOUND_ENTITY_SECTOR];
             $self->response['errors'][0]['event']['id']                 = $e->getNotFoundEntitySector();
             $self->response['errors'][0]['event']['puschaseIndex']      = $e->getPuschaseIndex();
+            $self->httpResponseCode                                     = Response::HTTP_UNPROCESSABLE_ENTITY;
         }
         if (!empty($e->getNotFoundEntityUser())) {
             $self->response['errors'][0]['code']                        = TicketPurchaseDTOException::NOT_FOUND_ENTITY_USER;
             $self->response['errors'][0]['message']                     = TicketPurchaseDTOException::PURCHASE_ERROR_MESSAGE[TicketPurchaseDTOException::NOT_FOUND_ENTITY_USER];
             $self->response['errors'][0]['user']['id']                  = $e->getNotFoundEntityUser();
             $self->response['errors'][0]['user']['puschaseIndex']       = $e->getPuschaseIndex();
+            $self->httpResponseCode                                     = Response::HTTP_UNPROCESSABLE_ENTITY;
         }
         if (!empty($e->getNotFoundEntityPlace())) {
             $self->response['errors'][0]['code']                        = TicketPurchaseDTOException::NOT_FOUND_ENTITY_PLACE;
             $self->response['errors'][0]['message']                     = TicketPurchaseDTOException::PURCHASE_ERROR_MESSAGE[TicketPurchaseDTOException::NOT_FOUND_ENTITY_PLACE];
             $self->response['errors'][0]['place']['id']                 = $e->getNotFoundEntityPlace();
             $self->response['errors'][0]['place']['puschaseIndex']      = $e->getPuschaseIndex();
+            $self->httpResponseCode                                     = Response::HTTP_UNPROCESSABLE_ENTITY;
         }
-
+        
         return $self;
     }
 
@@ -103,6 +111,7 @@ class ExceptionTicketResponse
             $i++;
         }
 
+        $self->httpResponseCode                                     = Response::HTTP_OK;
         return $self;
     }
 
@@ -124,6 +133,7 @@ class ExceptionTicketResponse
             $i++;
         }
 
+        $self->httpResponseCode                                     = Response::HTTP_OK;
         return $self;
     }
 
@@ -135,12 +145,17 @@ class ExceptionTicketResponse
         $self->response['errors'][0]['message']                 = $e->getMessage();
         $self->response['errors'][0]['code']                    = 500;
 
+        $self->httpResponseCode                                         = Response::HTTP_INTERNAL_SERVER_ERROR;
         return $self;
     }
-
 
     public function serialize(): array
     {
         return $this->response;
+    }
+
+    public function getHttpResponseCode():int
+    {
+        return $this->httpResponseCode;
     }
 }

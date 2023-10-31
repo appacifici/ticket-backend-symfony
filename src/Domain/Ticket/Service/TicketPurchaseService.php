@@ -68,7 +68,7 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
         $checkLimitPurchase = $this->checkLimitPurchase();
         if ($checkLimitPurchase instanceof TicketPurchaseLimitException) {
             /** @psalm-suppress InvalidThrow */
-            throw $this->checkLimitPurchase();
+            throw $checkLimitPurchase;
         }
 
         $ticketsSoldOut = $this->ticketsSoldOut();
@@ -103,12 +103,12 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
                     $purchase->getUser(),
                     $ticketIndex
                 );
-                $ticketPurchaseSuccess->addTicket($ticket);
+                $ticketPurchaseSuccess->addTicket($ticket);                
                 $ticketIndex++;
             }
 
-            $this->emailService->sendTicketPusrchaseEmail($ticketPurchases, $ticketPurchaseSuccess);
             $this->doctrine->getConnection()->commit();
+            $this->emailService->sendTicketPusrchaseEmail($ticketPurchases, $ticketPurchaseSuccess);            
         } catch (Exception $e) {
             $this->doctrine->getConnection()->rollBack();
             throw new Exception('Internal query error' . $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
@@ -119,6 +119,12 @@ class TicketPurchaseService implements TicketPurchaseServiceInterface
 
         return $ticketPurchaseSuccess;
     }
+
+
+    private function saveTicket() {
+        //switch 
+    } 
+
 
     /**
      * Controlla se vengono rispettati i limiti di acquisto per transazione dei ticket
